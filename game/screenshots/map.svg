@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" font-family="Georgia, serif">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="20%" r="80%">
+      <stop offset="0%" stop-color="#2b1a4a"/>
+      <stop offset="40%" stop-color="#1a0d2e"/>
+      <stop offset="100%" stop-color="#0f0720"/>
+    </radialGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3c235f"/>
+      <stop offset="100%" stop-color="#1e1237"/>
+    </linearGradient>
+    <linearGradient id="lockedNode" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e1e28"/>
+      <stop offset="100%" stop-color="#0f0f19"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+
+  <!-- header -->
+  <rect width="1200" height="64" fill="#000" opacity="0.4"/>
+  <rect x="20" y="14" width="44" height="36" rx="8" fill="#3b2766" stroke="#f4c542" stroke-width="2"/>
+  <text x="42" y="40" text-anchor="middle" font-size="20" fill="#f4e9d1">◀</text>
+  <text x="600" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#ffd764">The Enchanted Nut Path</text>
+  <text x="1080" y="40" text-anchor="end" font-size="16" font-weight="700" fill="#f4e9d1">⭐ 11 / 60</text>
+
+  <!-- nodes -->
+  <g font-size="16">
+    <!-- node 1 -->
+    <g transform="translate(280,100)">
+      <rect width="640" height="78" rx="14" fill="url(#node)" stroke="#f4c542" stroke-width="2"/>
+      <circle cx="46" cy="39" r="26" fill="#000" opacity="0.45" stroke="#f4c542" stroke-width="2"/>
+      <text x="46" y="48" text-anchor="middle" font-size="22" font-weight="900" fill="#ffd764">1</text>
+      <text x="92" y="34" font-weight="700" fill="#f4e9d1">Ollivander's Orchard</text>
+      <text x="92" y="56" font-size="12" fill="#d9c79a">Score 3,000 · 25 moves</text>
+      <g transform="translate(560,30)" font-size="22">
+        <text x="0"  fill="#ffd764">★</text>
+        <text x="22" fill="#ffd764">★</text>
+        <text x="44" fill="#ffd764">★</text>
+      </g>
+    </g>
+    <!-- node 2 -->
+    <g transform="translate(310,196)">
+      <rect width="640" height="78" rx="14" fill="url(#node)" stroke="#f4c542" stroke-width="2"/>
+      <circle cx="46" cy="39" r="26" fill="#000" opacity="0.45" stroke="#f4c542" stroke-width="2"/>
+      <text x="46" y="48" text-anchor="middle" font-size="22" font-weight="900" fill="#ffd764">2</text>
+      <text x="92" y="34" font-weight="700" fill="#f4e9d1">Diagon Alley</text>
+      <text x="92" y="56" font-size="12" fill="#d9c79a">Score 5,000 · 24 moves</text>
+      <g transform="translate(560,30)" font-size="22">
+        <text x="0"  fill="#ffd764">★</text>
+        <text x="22" fill="#ffd764">★</text>
+        <text x="44" fill="#ffffff20">★</text>
+      </g>
+    </g>
+    <!-- node 3 -->
+    <g transform="translate(280,292)">
+      <rect width="640" height="78" rx="14" fill="url(#node)" stroke="#f4c542" stroke-width="2"/>
+      <circle cx="46" cy="39" r="26" fill="#000" opacity="0.45" stroke="#f4c542" stroke-width="2"/>
+      <text x="46" y="48" text-anchor="middle" font-size="22" font-weight="900" fill="#ffd764">3</text>
+      <text x="92" y="34" font-weight="700" fill="#f4e9d1">Gringotts Grove</text>
+      <text x="92" y="56" font-size="12" fill="#d9c79a">Collect 15 Enchanted Acorn · 22 moves</text>
+      <g transform="translate(560,30)" font-size="22">
+        <text x="0"  fill="#ffd764">★</text>
+        <text x="22" fill="#ffd764">★</text>
+        <text x="44" fill="#ffd764">★</text>
+      </g>
+    </g>
+    <!-- node 4 -->
+    <g transform="translate(310,388)">
+      <rect width="640" height="78" rx="14" fill="url(#node)" stroke="#f4c542" stroke-width="2"/>
+      <circle cx="46" cy="39" r="26" fill="#000" opacity="0.45" stroke="#f4c542" stroke-width="2"/>
+      <text x="46" y="48" text-anchor="middle" font-size="22" font-weight="900" fill="#ffd764">4</text>
+      <text x="92" y="34" font-weight="700" fill="#f4e9d1">The Burrow Thicket</text>
+      <text x="92" y="56" font-size="12" fill="#d9c79a">Collect 18 Bewitched Walnut · 22 moves</text>
+      <g transform="translate(560,30)" font-size="22">
+        <text x="0"  fill="#ffd764">★</text>
+        <text x="22" fill="#ffd764">★</text>
+        <text x="44" fill="#ffffff20">★</text>
+      </g>
+    </g>
+    <!-- node 5 (current) -->
+    <g transform="translate(280,484)">
+      <rect width="640" height="78" rx="14" fill="url(#node)" stroke="#ffd764" stroke-width="3"/>
+      <circle cx="46" cy="39" r="26" fill="#000" opacity="0.45" stroke="#ffd764" stroke-width="2.5"/>
+      <text x="46" y="48" text-anchor="middle" font-size="22" font-weight="900" fill="#ffd764">5</text>
+      <text x="92" y="34" font-weight="700" fill="#f4e9d1">Forbidden Forest</text>
+      <text x="92" y="56" font-size="12" fill="#d9c79a">Clear 6 jinxed · 20 moves</text>
+      <g transform="translate(560,30)" font-size="22">
+        <text x="0"  fill="#ffd764">★</text>
+        <text x="22" fill="#ffffff20">★</text>
+        <text x="44" fill="#ffffff20">★</text>
+      </g>
+    </g>
+    <!-- node 6 (locked) -->
+    <g transform="translate(310,580)" opacity="0.55">
+      <rect width="640" height="78" rx="14" fill="url(#lockedNode)" stroke="#555" stroke-width="2"/>
+      <circle cx="46" cy="39" r="26" fill="#000" opacity="0.45" stroke="#555" stroke-width="2"/>
+      <text x="46" y="48" text-anchor="middle" font-size="22" font-weight="900" fill="#888">6</text>
+      <text x="92" y="34" font-weight="700" fill="#aaa">Hogsmeade Hollow</text>
+      <text x="92" y="56" font-size="12" fill="#888">🔒 Locked</text>
+    </g>
+    <!-- node 7 (locked) -->
+    <g transform="translate(280,676)" opacity="0.55">
+      <rect width="640" height="78" rx="14" fill="url(#lockedNode)" stroke="#555" stroke-width="2"/>
+      <circle cx="46" cy="39" r="26" fill="#000" opacity="0.45" stroke="#555" stroke-width="2"/>
+      <text x="46" y="48" text-anchor="middle" font-size="22" font-weight="900" fill="#888">7</text>
+      <text x="92" y="34" font-weight="700" fill="#aaa">Great Hall Pantry</text>
+      <text x="92" y="56" font-size="12" fill="#888">🔒 Locked</text>
+    </g>
+    <!-- ellipsis -->
+    <text x="600" y="800" text-anchor="middle" font-size="32" fill="#d9c79a" opacity="0.5">⋯ 13 more chapters ⋯</text>
+    <text x="600" y="850" text-anchor="middle" font-size="14" fill="#d9c79a" opacity="0.6" font-style="italic">Charles's Cauldron · Brandon's Boss Keep</text>
+  </g>
+</svg>

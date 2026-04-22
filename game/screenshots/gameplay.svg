@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" font-family="Georgia, serif">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="20%" r="80%">
+      <stop offset="0%" stop-color="#2b1a4a"/>
+      <stop offset="40%" stop-color="#1a0d2e"/>
+      <stop offset="100%" stop-color="#0f0720"/>
+    </radialGradient>
+    <linearGradient id="board" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1d1230"/>
+      <stop offset="100%" stop-color="#0f0820"/>
+    </linearGradient>
+    <linearGradient id="acorn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a06a35"/><stop offset="1" stop-color="#6b4720"/></linearGradient>
+    <linearGradient id="walnut" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d39870"/><stop offset="1" stop-color="#8b5a2b"/></linearGradient>
+    <linearGradient id="chestnut" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a4a20"/><stop offset="1" stop-color="#4a2410"/></linearGradient>
+    <linearGradient id="hazel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f59020"/><stop offset="1" stop-color="#a35a08"/></linearGradient>
+    <linearGradient id="pecan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5d020"/><stop offset="1" stop-color="#a37e08"/></linearGradient>
+    <linearGradient id="almond" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0e4c8"/><stop offset="1" stop-color="#a89a78"/></linearGradient>
+    <radialGradient id="patronus" cx="40%" cy="35%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="30%" stop-color="#bde6ff"/>
+      <stop offset="70%" stop-color="#6b21a8"/>
+      <stop offset="100%" stop-color="#2a0b4a"/>
+    </radialGradient>
+    <pattern id="jinxPat" patternUnits="userSpaceOnUse" width="14" height="14" patternTransform="rotate(45)">
+      <rect width="7" height="14" fill="#6b21a8" opacity="0.85"/>
+      <rect x="7" width="7" height="14" fill="#000" opacity="0.7"/>
+    </pattern>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg)"/>
+
+  <!-- header / HUD -->
+  <rect x="0" y="0" width="1200" height="80" fill="#000" opacity="0.4"/>
+  <rect x="20" y="20" width="50" height="44" rx="8" fill="#3b2766" stroke="#f4c542" stroke-width="2"/>
+  <text x="45" y="50" text-anchor="middle" font-size="22" fill="#f4e9d1">⏸</text>
+
+  <g font-size="12" letter-spacing="1.5" fill="#d9c79a" text-anchor="middle">
+    <g><rect x="320" y="14" width="170" height="56" rx="8" fill="#000" opacity="0.35" stroke="#f4c54250" stroke-width="1"/>
+       <text x="405" y="32">LEVEL</text>
+       <text x="405" y="62" font-size="22" font-weight="900" fill="#ffd764">7</text></g>
+    <g><rect x="500" y="14" width="220" height="56" rx="8" fill="#000" opacity="0.35" stroke="#f4c54250" stroke-width="1"/>
+       <text x="610" y="32">SCORE</text>
+       <text x="610" y="62" font-size="22" font-weight="900" fill="#ffd764">12,840</text></g>
+    <g><rect x="730" y="14" width="170" height="56" rx="8" fill="#000" opacity="0.35" stroke="#f4c54250" stroke-width="1"/>
+       <text x="815" y="32">MOVES</text>
+       <text x="815" y="62" font-size="22" font-weight="900" fill="#ffd764">14</text></g>
+  </g>
+
+  <!-- objectives -->
+  <g font-size="14" fill="#f4e9d1">
+    <rect x="370" y="100" width="160" height="32" rx="16" fill="#000" opacity="0.35" stroke="#f4c54250"/>
+    <text x="395" y="121" font-size="16">🌰</text>
+    <text x="425" y="121">Collect 12/15</text>
+    <rect x="540" y="100" width="160" height="32" rx="16" fill="#0f6a3d40" stroke="#0f6a3d"/>
+    <text x="565" y="121" font-size="16">🔒</text>
+    <text x="595" y="121" fill="#aaf0c2">Jinx 6/6 ✓</text>
+    <rect x="710" y="100" width="160" height="32" rx="16" fill="#000" opacity="0.35" stroke="#f4c54250"/>
+    <text x="735" y="121" font-size="16">👑</text>
+    <text x="765" y="121">Golden 1/2</text>
+  </g>
+
+  <!-- board -->
+  <g transform="translate(300,160)">
+    <rect width="600" height="600" rx="14" fill="url(#board)" stroke="#f4c542" stroke-width="3"/>
+
+    <!-- 8x8 tiles, 70px each, padded -->
+    <g transform="translate(12,12)">
+      <!-- row 0 -->
+      <g><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
+      <g transform="translate(72,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+      <g transform="translate(144,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <g transform="translate(216,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+      <g transform="translate(288,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
+      <g transform="translate(360,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+      <g transform="translate(432,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
+      <g transform="translate(504,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
+
+      <!-- row 1 -->
+      <g transform="translate(0,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+      <g transform="translate(72,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <g transform="translate(144,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
+      <g transform="translate(216,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#patronus)" filter="url(#glow)"/><text x="36" y="55" text-anchor="middle" font-size="32" fill="#fff">✨</text></g>
+      <g transform="translate(288,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
+      <g transform="translate(360,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
+      <g transform="translate(432,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+      <g transform="translate(504,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+
+      <!-- row 2 with selected and striped -->
+      <g transform="translate(0,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+      <g transform="translate(72,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
+      <g transform="translate(144,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/>
+        <rect x="9" y="9" width="54" height="54" rx="4" fill="url(#stripes)" opacity="0.35"/>
+        <text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+      <g transform="translate(216,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)" stroke="#ffd764" stroke-width="3"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <g transform="translate(288,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <g transform="translate(360,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <g transform="translate(432,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
+      <g transform="translate(504,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+
+      <!-- row 3 -->
+      <g transform="translate(0,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
+      <g transform="translate(72,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+      <g transform="translate(144,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+      <g transform="translate(216,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
+      <g transform="translate(288,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)" filter="url(#glow)"/>
+        <text x="36" y="55" text-anchor="middle" font-size="32">💥</text></g>
+      <g transform="translate(360,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
+      <g transform="translate(432,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <g transform="translate(504,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+
+      <!-- row 4 with jinx -->
+      <g transform="translate(0,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
+      <g transform="translate(72,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/>
+        <rect x="2" y="2" width="68" height="68" rx="8" fill="url(#jinxPat)" opacity="0.85"/></g>
+      <g transform="translate(144,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
+      <g transform="translate(216,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <g transform="translate(288,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
+      <g transform="translate(360,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+      <g transform="translate(432,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+      <g transform="translate(504,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
+
+      <!-- row 5 with golden -->
+      <g transform="translate(0,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <g transform="translate(72,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+      <g transform="translate(144,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)" filter="url(#glow)"/>
+        <text x="36" y="55" text-anchor="middle" font-size="36">🌰</text>
+        <text x="60" y="22" text-anchor="middle" font-size="20">👑</text></g>
+      <g transform="translate(216,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+      <g transform="translate(288,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
+      <g transform="translate(360,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
+      <g transform="translate(432,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <g transform="translate(504,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+
+      <!-- row 6 -->
+      <g transform="translate(0,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+      <g transform="translate(72,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <g transform="translate(144,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+      <g transform="translate(216,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
+      <g transform="translate(288,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+      <g transform="translate(360,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+      <g transform="translate(432,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
+      <g transform="translate(504,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
+
+      <!-- row 7 -->
+      <g transform="translate(0,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+      <g transform="translate(72,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
+      <g transform="translate(144,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
+      <g transform="translate(216,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <g transform="translate(288,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
+      <g transform="translate(360,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
+      <g transform="translate(432,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
+      <g transform="translate(504,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+    </g>
+  </g>
+
+  <!-- combo popup -->
+  <text x="600" y="500" text-anchor="middle" font-size="56" font-weight="900" fill="#ffd764" filter="url(#glow)" opacity="0.9">SPELLBINDING!</text>
+
+  <text x="600" y="800" text-anchor="middle" font-size="14" fill="#d9c79a" font-style="italic" letter-spacing="2">CHAPTER 7 — GREAT HALL PANTRY</text>
+</svg>

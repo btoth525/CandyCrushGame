@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#1a0d2e">
+<title>Charles &amp; Brandon's Wizarding World of Nuts</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+
+    <div id="screen-title" class="screen active">
+      <div class="stars-bg"></div>
+      <div class="title-inner">
+        <h1 class="title-main">
+          <span class="title-by">Charles &amp; Brandon's</span>
+          <span class="title-big">Wizarding World</span>
+          <span class="title-of">of</span>
+          <span class="title-big title-nuts">Nuts</span>
+        </h1>
+        <p class="tagline">A Match-3 Spellbound Adventure</p>
+        <div class="title-buttons">
+          <button id="btn-play" class="btn btn-primary">Begin Adventure</button>
+          <button id="btn-settings" class="btn">Settings</button>
+          <button id="btn-reset" class="btn btn-small">Reset Progress</button>
+        </div>
+        <p class="credits">Brewed by Charles &amp; Brandon in the Great Nuttery</p>
+      </div>
+    </div>
+
+    <div id="screen-map" class="screen">
+      <header class="map-header">
+        <button id="btn-map-back" class="btn btn-icon">◀</button>
+        <h2>The Enchanted Nut Path</h2>
+        <div class="star-total">⭐ <span id="stars-total">0</span> / <span id="stars-max">60</span></div>
+      </header>
+      <div id="map-scroll">
+        <svg id="map-path" preserveAspectRatio="none"></svg>
+        <div id="map-nodes"></div>
+      </div>
+    </div>
+
+    <div id="screen-game" class="screen">
+      <header class="game-header">
+        <button id="btn-pause" class="btn btn-icon">⏸</button>
+        <div class="hud">
+          <div class="hud-item"><span class="hud-label">Level</span><span id="hud-level">1</span></div>
+          <div class="hud-item"><span class="hud-label">Score</span><span id="hud-score">0</span></div>
+          <div class="hud-item"><span class="hud-label">Moves</span><span id="hud-moves">0</span></div>
+        </div>
+      </header>
+      <div id="objectives"></div>
+      <div id="board-wrap">
+        <div id="board"></div>
+        <div id="fx-layer"></div>
+        <div id="combo-popup"></div>
+        <div id="shake-wrap"></div>
+      </div>
+      <div class="level-name-bar"><span id="level-name">Level 1</span></div>
+    </div>
+
+    <div id="modal-backdrop" class="modal-backdrop hidden">
+      <div id="modal" class="modal">
+        <div id="modal-content"></div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+  </div>
+
+  <script src="textures.js"></script>
+  <script src="levels.js"></script>
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+  <script src="ui.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
