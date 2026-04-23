@@ -344,8 +344,40 @@
 }
 .lc-grid label { font-size: 11px; color: var(--parchment-dark); }
 .lc-grid input { font-size: 13px; padding: 4px 8px; }
+.lc-stories {
+  margin-top: 10px;
+  display: grid;
+  gap: 4px;
+}
+.lc-story-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  opacity: 0.85;
+  margin-top: 4px;
+}
+.lc-stories textarea {
+  width: 100%;
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(244,197,66,0.35);
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: var(--parchment);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  resize: vertical;
+  font-style: italic;
+}
+.lc-stories textarea:focus {
+  outline: none;
+  border-color: var(--gold-bright);
+}
 .lc-obj {
-  margin-top: 8px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(244,197,66,0.18);
   font-size: 11px;
   color: var(--parchment-dark);
   font-style: italic;

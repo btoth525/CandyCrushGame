@@ -191,6 +191,7 @@
       const card = document.createElement('div');
       card.className = 'level-card';
       const stars = lv.scoreStars || [0, 0, 0];
+      const story = lv.story || { intro: '', win: '', lose: '' };
       card.innerHTML = `
         <div class="lc-head">
           <div class="lc-num">${lv.id}</div>
@@ -206,9 +207,17 @@
           <label>3★ score</label>
           <input type="number" data-k="s3" value="${stars[2]}" min="0" step="500">
         </div>
+        <div class="lc-stories">
+          <label class="lc-story-label">Story · Intro</label>
+          <textarea data-k="intro" rows="2" maxlength="280" placeholder="Shown before the level. {name} expands to wizard name.">${escapeAttr(story.intro || '')}</textarea>
+          <label class="lc-story-label">Story · Victory line</label>
+          <textarea data-k="win" rows="2" maxlength="280" placeholder="Shown when the player wins.">${escapeAttr(story.win || '')}</textarea>
+          <label class="lc-story-label">Story · Defeat line</label>
+          <textarea data-k="lose" rows="2" maxlength="280" placeholder="Shown when the player runs out of moves.">${escapeAttr(story.lose || '')}</textarea>
+        </div>
         <div class="lc-obj">${objectiveSummary(lv)}</div>`;
       root.appendChild(card);
-      qsa('input', card).forEach((inp) => {
+      qsa('input, textarea', card).forEach((inp) => {
         inp.addEventListener('input', () => {
           /* Lazy clone levels so we mutate cfg, not defaults */
           if (!cfg.levels || cfg.levels.length === 0) {
@@ -220,6 +229,10 @@
           if (inp.dataset.k === 's1')    target.scoreStars = [intv(inp), target.scoreStars ? target.scoreStars[1] : 0, target.scoreStars ? target.scoreStars[2] : 0];
           if (inp.dataset.k === 's2')    target.scoreStars = [target.scoreStars[0], intv(inp), target.scoreStars[2]];
           if (inp.dataset.k === 's3')    target.scoreStars = [target.scoreStars[0], target.scoreStars[1], intv(inp)];
+          if (inp.dataset.k === 'intro' || inp.dataset.k === 'win' || inp.dataset.k === 'lose') {
+            if (!target.story) target.story = { intro: '', win: '', lose: '' };
+            target.story[inp.dataset.k] = inp.value;
+          }
         });
       });
     });

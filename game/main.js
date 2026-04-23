@@ -68,6 +68,23 @@ NUTS.Main = (function () {
     const stats = { collect: {}, jinx: 0, golden: 0 };
     ui.setHud(level, 0, level.moves);
     ui.renderObjectives(level, stats, 0);
+    /* Show story intro before the player makes a move (skippable) */
+    if (level.story && level.story.intro) {
+      ui.showModal(`
+        <h2>${escapeHtml(level.name)}</h2>
+        <p class="story-intro">${expandStory(level.story.intro)}</p>
+      `, [
+        { label: "Cast", primary: true, onClick: () => {
+          ui.hideModal();
+          launchGame(level);
+        } },
+      ]);
+    } else {
+      launchGame(level);
+    }
+  }
+
+  function launchGame(level) {
     game = NUTS.Game(level, {
       boardEl: document.getElementById('board'),
       fxEl: document.getElementById('fx-layer'),
@@ -132,6 +149,8 @@ NUTS.Main = (function () {
       const newBestHtml = isNewBest && won ? `<div class="new-best">⚡ New Best!</div>` : '';
       const rankHtml = (rankInfo && rankInfo.rank && rankInfo.rank <= 50)
         ? `<div class="rank-up">🏆 Global rank #${rankInfo.rank}</div>` : '';
+      const storyText = lv.story && (won ? lv.story.win : lv.story.lose);
+      const storyHtml = storyText ? `<p class="story-line">${expandStory(storyText)}</p>` : '';
       ui.showModal(
         `<h2>${won ? 'Victory!' : 'Hex Hath Fallen'}</h2>
          <p>${won ? `${lv.name} cleared with ${score.toLocaleString()} points` : `Out of moves on ${lv.name}`}</p>
@@ -140,6 +159,7 @@ NUTS.Main = (function () {
             <span class="${stars>=2?'star-on':'star-off'}">★</span>
             <span class="${stars>=3?'star-on':'star-off'}">★</span>
          </div>` : ''}
+         ${storyHtml}
          ${newBestHtml}
          ${rankHtml}`,
         [
@@ -308,6 +328,137 @@ NUTS.Main = (function () {
     return Array.from(out);
   }
 
+  /* ===== First-run flow: forced wizard name + tutorial ===== */
+  const FIRST_RUN_KEY = 'cbwwn-first-run-done';
+
+  function getWizardName() {
+    /* Prefer the server-side handle when logged in */
+    if (NUTS.Api && NUTS.Api.user && NUTS.Api.user()) {
+      const u = NUTS.Api.user();
+      return u.displayName || u.name;
+    }
+    return localStorage.getItem('cbwwn-local-name') || '';
+  }
+
+  function setLocalWizardName(n) {
+    if (n) localStorage.setItem('cbwwn-local-name', n);
+    else   localStorage.removeItem('cbwwn-local-name');
+  }
+
+  function expandStory(text) {
+    if (!text) return '';
+    return String(text).replace(/\{name\}/g, escapeHtml(getWizardName() || 'wizard'));
+  }
+
+  function maybeShowFirstRun() {
+    if (localStorage.getItem(FIRST_RUN_KEY)) {
+      paintGreeting();
+      return;
+    }
+    /* First visit ever: force wizard name pick, then tutorial. */
+    forceWizardName().then((name) => {
+      if (!name) return;            /* user closed somehow; we'll re-prompt next visit */
+      runTutorial().then(() => {
+        localStorage.setItem(FIRST_RUN_KEY, '1');
+        paintGreeting();
+      });
+    });
+  }
+
+  function paintGreeting() {
+    const tag = document.querySelector('.tagline');
+    const name = getWizardName();
+    if (!tag) return;
+    if (name) {
+      tag.textContent = `Welcome back, ${name}.`;
+    }
+  }
+
+  function forceWizardName() {
+    return new Promise((resolve) => {
+      const sugg = suggestNames(4);
+      ui.showModal(`
+        <h2>Pick Your Wizard Name</h2>
+        <p>Before you cast a single spell, every wizard needs a name. 2–20 letters/numbers/spaces.</p>
+        <input id="fr-input" type="text" maxlength="20" placeholder="e.g. Stardust Owl"
+               style="width:100%;padding:10px;margin-top:10px;background:rgba(0,0,0,0.4);
+                      border:2px solid var(--gold);border-radius:8px;color:var(--parchment);
+                      font-family:inherit;font-size:16px;text-align:center;">
+        <div class="name-suggestions">
+          ${sugg.map((s) => `<button type="button" class="name-chip" data-name="${s.replace(/"/g,'&quot;')}">${s}</button>`).join('')}
+        </div>
+        <p id="fr-err" class="muted" style="margin-top:8px;color:#ff7aa5;min-height:18px;"></p>
+      `, [
+        { label: 'Continue', primary: true, onClick: async () => {
+          const name = document.getElementById('fr-input').value.trim();
+          const err = document.getElementById('fr-err');
+          if (!/^[A-Za-z0-9_\- ]{2,20}$/.test(name)) {
+            err.textContent = 'Use 2–20 letters, numbers, spaces, _ or –';
+            return;
+          }
+          /* Try server registration if online; fall back to local-only */
+          if (NUTS.Api && NUTS.Api.isOnline && NUTS.Api.isOnline()) {
+            try {
+              const u = await NUTS.Api.register(name);
+              ui.hideModal();
+              refreshOnlineStatus();
+              resolve(u.displayName || u.name);
+              return;
+            } catch (e) {
+              if (e.message === 'name_taken') {
+                err.textContent = 'That name is taken by another wizard. Try another.';
+                return;
+              }
+              /* Fall through to local mode on any other server error */
+            }
+          }
+          setLocalWizardName(name);
+          ui.hideModal();
+          resolve(name);
+        } },
+      ]);
+      setTimeout(() => {
+        const inp = document.getElementById('fr-input');
+        if (inp) inp.focus();
+        document.querySelectorAll('.name-chip').forEach((c) => {
+          c.onclick = () => {
+            const v = c.getAttribute('data-name') || '';
+            const i = document.getElementById('fr-input');
+            if (i) { i.value = v; i.focus(); }
+          };
+        });
+      }, 50);
+    });
+  }
+
+  function runTutorial() {
+    return new Promise((resolve) => {
+      const slides = (NUTS.tutorial || []).map((s) => ({
+        title: expandStory(s.title),
+        body:  expandStory(s.body),
+      }));
+      if (!slides.length) { resolve(); return; }
+      let i = 0;
+      function show() {
+        const s = slides[i];
+        const isLast = i === slides.length - 1;
+        ui.showModal(
+          `<div class="tutorial-step">${i + 1} / ${slides.length}</div>
+           <h2>${s.title}</h2>
+           <p>${s.body}</p>`,
+          [
+            ...(i > 0 ? [{ label: 'Back',  onClick: () => { i--; show(); } }] : []),
+            { label: isLast ? "Let's begin" : 'Next', primary: true, onClick: () => {
+              if (isLast) { ui.hideModal(); resolve(); }
+              else { i++; show(); }
+            } },
+          ]
+        );
+      }
+      show();
+    });
+  }
+
   function promptWizardName(reason) {
     return new Promise((resolve) => {
       const sugg = suggestNames(4);
@@ -468,6 +619,7 @@ NUTS.Main = (function () {
     if (bgCanvas && NUTS.Background) NUTS.Background.init(bgCanvas);
     refreshOnlineStatus();
     paintStreakBadge();
+    maybeShowFirstRun();
     /* Pull cloud save if logged in */
     if (NUTS.Api && NUTS.Api.isOnline() && NUTS.Api.user()) {
       NUTS.Api.loadCloudSave().then((cloud) => {
