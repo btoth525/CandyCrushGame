@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#3b2766"/>
+      <stop offset="60%" stop-color="#1a0d2e"/>
+      <stop offset="100%" stop-color="#0a0518"/>
+    </radialGradient>
+    <linearGradient id="cap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6b3410"/>
+      <stop offset="100%" stop-color="#3d1d08"/>
+    </linearGradient>
+    <linearGradient id="nut" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f5d36a"/>
+      <stop offset="50%" stop-color="#d99a2b"/>
+      <stop offset="100%" stop-color="#8b5a16"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="35%" cy="40%" r="40%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+
+  <!-- decorative stars -->
+  <g fill="#ffd764" opacity="0.85">
+    <circle cx="80"  cy="90"  r="3"/>
+    <circle cx="430" cy="110" r="2.5"/>
+    <circle cx="60"  cy="380" r="2.5"/>
+    <circle cx="450" cy="400" r="3"/>
+    <circle cx="380" cy="60"  r="2"/>
+    <circle cx="120" cy="180" r="2"/>
+  </g>
+
+  <!-- crossed wands behind -->
+  <g transform="translate(256,300)" opacity="0.55">
+    <g transform="rotate(-30)">
+      <rect x="-130" y="-5" width="260" height="10" rx="5" fill="#5a3010"/>
+      <circle cx="-130" cy="0" r="9" fill="#8b5a16"/>
+    </g>
+    <g transform="rotate(30)">
+      <rect x="-130" y="-5" width="260" height="10" rx="5" fill="#5a3010"/>
+      <circle cx="-130" cy="0" r="9" fill="#8b5a16"/>
+    </g>
+  </g>
+
+  <!-- acorn -->
+  <g transform="translate(256,256)" filter="url(#glow)">
+    <!-- nut body -->
+    <ellipse cx="0" cy="40" rx="100" ry="120" fill="url(#nut)"/>
+    <!-- cap -->
+    <path d="M -110,-30 Q -110,-90 0,-100 Q 110,-90 110,-30 Q 110,10 0,15 Q -110,10 -110,-30 Z" fill="url(#cap)"/>
+    <!-- cap texture cross-hatch -->
+    <g stroke="#2a1408" stroke-width="2" opacity="0.6" fill="none">
+      <path d="M -90,-50 Q -50,-30 -10,-50"/>
+      <path d="M 10,-50 Q 50,-30 90,-50"/>
+      <path d="M -90,-20 Q -50,0 -10,-20"/>
+      <path d="M 10,-20 Q 50,0 90,-20"/>
+      <path d="M -50,-80 Q -10,-60 30,-80"/>
+    </g>
+    <!-- stem -->
+    <rect x="-7" y="-115" width="14" height="20" rx="3" fill="#3d1d08"/>
+    <!-- shine -->
+    <ellipse cx="-30" cy="20" rx="40" ry="50" fill="url(#shine)"/>
+  </g>
+
+  <!-- magic sparkles around acorn -->
+  <g fill="#ffd764" filter="url(#glow)">
+    <g transform="translate(110,180)">
+      <path d="M 0,-12 L 3,-3 L 12,0 L 3,3 L 0,12 L -3,3 L -12,0 L -3,-3 Z"/>
+    </g>
+    <g transform="translate(400,200)">
+      <path d="M 0,-10 L 3,-3 L 10,0 L 3,3 L 0,10 L -3,3 L -10,0 L -3,-3 Z"/>
+    </g>
+    <g transform="translate(390,360)">
+      <path d="M 0,-14 L 4,-4 L 14,0 L 4,4 L 0,14 L -4,4 L -14,0 L -4,-4 Z"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,19 @@
+{
+  "name": "wizarding-nuts-server",
+  "version": "1.0.0",
+  "description": "Server-mode backend for Charles & Brandon's Wizarding World of Nuts: leaderboards, accounts, cloud save, daily challenges.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.5.0",
+    "compression": "^1.7.5",
+    "express": "^4.21.1"
+  }
+}

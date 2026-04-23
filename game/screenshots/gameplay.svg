@@ -1,40 +1,47 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" font-family="Georgia, serif">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="20%" r="80%">
-      <stop offset="0%" stop-color="#2b1a4a"/>
-      <stop offset="40%" stop-color="#1a0d2e"/>
-      <stop offset="100%" stop-color="#0f0720"/>
-    </radialGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#1f0f44"/>
+      <stop offset="55%" stop-color="#0e0621"/>
+      <stop offset="100%" stop-color="#05020e"/>
+    </linearGradient>
     <linearGradient id="board" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#1d1230"/>
       <stop offset="100%" stop-color="#0f0820"/>
     </linearGradient>
-    <linearGradient id="acorn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a06a35"/><stop offset="1" stop-color="#6b4720"/></linearGradient>
-    <linearGradient id="walnut" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d39870"/><stop offset="1" stop-color="#8b5a2b"/></linearGradient>
-    <linearGradient id="chestnut" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a4a20"/><stop offset="1" stop-color="#4a2410"/></linearGradient>
-    <linearGradient id="hazel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f59020"/><stop offset="1" stop-color="#a35a08"/></linearGradient>
-    <linearGradient id="pecan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5d020"/><stop offset="1" stop-color="#a37e08"/></linearGradient>
-    <linearGradient id="almond" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0e4c8"/><stop offset="1" stop-color="#a89a78"/></linearGradient>
-    <radialGradient id="patronus" cx="40%" cy="35%">
-      <stop offset="0%" stop-color="#fff"/>
-      <stop offset="30%" stop-color="#bde6ff"/>
-      <stop offset="70%" stop-color="#6b21a8"/>
-      <stop offset="100%" stop-color="#2a0b4a"/>
-    </radialGradient>
-    <pattern id="jinxPat" patternUnits="userSpaceOnUse" width="14" height="14" patternTransform="rotate(45)">
-      <rect width="7" height="14" fill="#6b21a8" opacity="0.85"/>
-      <rect x="7" width="7" height="14" fill="#000" opacity="0.7"/>
-    </pattern>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="4" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
+    <!-- wizard hat -->
+    <linearGradient id="hat-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b1ea0"/><stop offset="1" stop-color="#1a0b38"/></linearGradient>
+    <linearGradient id="hatG" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="#7a3fd9"/><stop offset="1" stop-color="#1a0b38"/></linearGradient>
+    <!-- wand -->
+    <linearGradient id="wand-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8b6614"/><stop offset="1" stop-color="#2a1a08"/></linearGradient>
+    <linearGradient id="wandG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a3a14"/><stop offset="0.5" stop-color="#8b6614"/><stop offset="1" stop-color="#2a1a08"/></linearGradient>
+    <!-- potion -->
+    <linearGradient id="pot-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a4836"/><stop offset="1" stop-color="#051a10"/></linearGradient>
+    <linearGradient id="potG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6cffca"/><stop offset="1" stop-color="#073d2a"/></linearGradient>
+    <!-- snitch -->
+    <linearGradient id="snitch-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8b6410"/><stop offset="1" stop-color="#3d2810"/></linearGradient>
+    <radialGradient id="snitchG" cx="0.38" cy="0.28"><stop offset="0" stop-color="#fff6d0"/><stop offset="0.5" stop-color="#ffd764"/><stop offset="1" stop-color="#5a4208"/></radialGradient>
+    <!-- book -->
+    <linearGradient id="book-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b1230"/><stop offset="1" stop-color="#1a0508"/></linearGradient>
+    <linearGradient id="bookG" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="#b0294f"/><stop offset="1" stop-color="#3a0b1a"/></linearGradient>
+    <!-- crystal -->
+    <linearGradient id="ball-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b1a80"/><stop offset="1" stop-color="#1a0838"/></linearGradient>
+    <radialGradient id="ballG" cx="0.38" cy="0.32"><stop offset="0" stop-color="#fff" stop-opacity="0.95"/><stop offset="0.5" stop-color="#6b21a8" stop-opacity="0.85"/><stop offset="1" stop-color="#1a0838" stop-opacity="0.95"/></radialGradient>
+    <radialGradient id="patronusG" cx="0.4" cy="0.3"><stop offset="0" stop-color="#fff"/><stop offset="0.3" stop-color="#bde6ff"/><stop offset="1" stop-color="#2a0b4a"/></radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
   </defs>
 
   <rect width="1200" height="900" fill="url(#bg)"/>
 
-  <!-- header / HUD -->
-  <rect x="0" y="0" width="1200" height="80" fill="#000" opacity="0.4"/>
+  <!-- Moon and stars hint of background -->
+  <circle cx="1020" cy="120" r="50" fill="#fff6d0" opacity="0.85"/>
+  <g fill="#fff" opacity="0.5">
+    <circle cx="100" cy="80" r="1.5"/><circle cx="280" cy="60" r="1"/><circle cx="180" cy="160" r="1.2"/>
+    <circle cx="900" cy="50" r="1.5"/><circle cx="1140" cy="210" r="1"/>
+  </g>
+
+  <!-- header -->
+  <rect x="0" y="0" width="1200" height="80" fill="#000" opacity="0.45"/>
   <rect x="20" y="20" width="50" height="44" rx="8" fill="#3b2766" stroke="#f4c542" stroke-width="2"/>
   <text x="45" y="50" text-anchor="middle" font-size="22" fill="#f4e9d1">⏸</text>
 
@@ -44,7 +51,7 @@
        <text x="405" y="62" font-size="22" font-weight="900" fill="#ffd764">7</text></g>
     <g><rect x="500" y="14" width="220" height="56" rx="8" fill="#000" opacity="0.35" stroke="#f4c54250" stroke-width="1"/>
        <text x="610" y="32">SCORE</text>
-       <text x="610" y="62" font-size="22" font-weight="900" fill="#ffd764">12,840</text></g>
+       <text x="610" y="62" font-size="22" font-weight="900" fill="#ffd764">14,280</text></g>
     <g><rect x="730" y="14" width="170" height="56" rx="8" fill="#000" opacity="0.35" stroke="#f4c54250" stroke-width="1"/>
        <text x="815" y="32">MOVES</text>
        <text x="815" y="62" font-size="22" font-weight="900" fill="#ffd764">14</text></g>
@@ -52,113 +59,165 @@
 
   <!-- objectives -->
   <g font-size="14" fill="#f4e9d1">
-    <rect x="370" y="100" width="160" height="32" rx="16" fill="#000" opacity="0.35" stroke="#f4c54250"/>
-    <text x="395" y="121" font-size="16">🌰</text>
-    <text x="425" y="121">Collect 12/15</text>
-    <rect x="540" y="100" width="160" height="32" rx="16" fill="#0f6a3d40" stroke="#0f6a3d"/>
-    <text x="565" y="121" font-size="16">🔒</text>
-    <text x="595" y="121" fill="#aaf0c2">Jinx 6/6 ✓</text>
-    <rect x="710" y="100" width="160" height="32" rx="16" fill="#000" opacity="0.35" stroke="#f4c54250"/>
-    <text x="735" y="121" font-size="16">👑</text>
-    <text x="765" y="121">Golden 1/2</text>
+    <rect x="420" y="100" width="170" height="32" rx="16" fill="#000" opacity="0.35" stroke="#f4c54250"/>
+    <text x="445" y="121" font-size="16">🪄</text>
+    <text x="475" y="121">Collect 11/15</text>
+    <rect x="600" y="100" width="140" height="32" rx="16" fill="#0f6a3d40" stroke="#0f6a3d"/>
+    <text x="625" y="121" font-size="16">✨</text>
+    <text x="655" y="121" fill="#aaf0c2">Drop 2/2 ✓</text>
+    <rect x="750" y="100" width="140" height="32" rx="16" fill="#000" opacity="0.35" stroke="#f4c54250"/>
+    <text x="775" y="121" font-size="16">🔒</text>
+    <text x="805" y="121">Jinx 4/6</text>
   </g>
 
-  <!-- board -->
+  <!-- board with rune ring -->
   <g transform="translate(300,160)">
-    <rect width="600" height="600" rx="14" fill="url(#board)" stroke="#f4c542" stroke-width="3"/>
+    <rect x="-10" y="-10" width="620" height="620" rx="18" fill="none" stroke="#ffd764" stroke-width="1.5" stroke-dasharray="4 8" opacity="0.3"/>
+    <rect width="600" height="600" rx="14" fill="url(#board)" stroke="#ffd764" stroke-width="3"/>
+    <rect x="6" y="6" width="588" height="6" fill="url(#board)" opacity="0.4"/>
 
-    <!-- 8x8 tiles, 70px each, padded -->
     <g transform="translate(12,12)">
-      <!-- row 0 -->
-      <g><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
-      <g transform="translate(72,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-      <g transform="translate(144,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
-      <g transform="translate(216,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-      <g transform="translate(288,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
-      <g transform="translate(360,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-      <g transform="translate(432,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
-      <g transform="translate(504,0)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
-
-      <!-- row 1 -->
-      <g transform="translate(0,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-      <g transform="translate(72,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
-      <g transform="translate(144,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
-      <g transform="translate(216,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#patronus)" filter="url(#glow)"/><text x="36" y="55" text-anchor="middle" font-size="32" fill="#fff">✨</text></g>
-      <g transform="translate(288,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
-      <g transform="translate(360,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
-      <g transform="translate(432,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-      <g transform="translate(504,72)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-
-      <!-- row 2 with selected and striped -->
-      <g transform="translate(0,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-      <g transform="translate(72,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
-      <g transform="translate(144,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/>
-        <rect x="9" y="9" width="54" height="54" rx="4" fill="url(#stripes)" opacity="0.35"/>
-        <text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-      <g transform="translate(216,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)" stroke="#ffd764" stroke-width="3"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
-      <g transform="translate(288,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
-      <g transform="translate(360,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
-      <g transform="translate(432,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
-      <g transform="translate(504,144)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-
-      <!-- row 3 -->
-      <g transform="translate(0,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
-      <g transform="translate(72,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-      <g transform="translate(144,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-      <g transform="translate(216,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
-      <g transform="translate(288,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)" filter="url(#glow)"/>
-        <text x="36" y="55" text-anchor="middle" font-size="32">💥</text></g>
-      <g transform="translate(360,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
-      <g transform="translate(432,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
-      <g transform="translate(504,216)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-
-      <!-- row 4 with jinx -->
-      <g transform="translate(0,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
-      <g transform="translate(72,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/>
-        <rect x="2" y="2" width="68" height="68" rx="8" fill="url(#jinxPat)" opacity="0.85"/></g>
-      <g transform="translate(144,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
-      <g transform="translate(216,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
-      <g transform="translate(288,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
-      <g transform="translate(360,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-      <g transform="translate(432,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-      <g transform="translate(504,288)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
-
-      <!-- row 5 with golden -->
-      <g transform="translate(0,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
-      <g transform="translate(72,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-      <g transform="translate(144,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)" filter="url(#glow)"/>
-        <text x="36" y="55" text-anchor="middle" font-size="36">🌰</text>
-        <text x="60" y="22" text-anchor="middle" font-size="20">👑</text></g>
-      <g transform="translate(216,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-      <g transform="translate(288,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
-      <g transform="translate(360,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
-      <g transform="translate(432,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
-      <g transform="translate(504,360)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-
-      <!-- row 6 -->
-      <g transform="translate(0,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-      <g transform="translate(72,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
-      <g transform="translate(144,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-      <g transform="translate(216,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
-      <g transform="translate(288,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-      <g transform="translate(360,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-      <g transform="translate(432,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
-      <g transform="translate(504,432)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
-
-      <!-- row 7 -->
-      <g transform="translate(0,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-      <g transform="translate(72,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#almond)"/><text x="36" y="55" text-anchor="middle" font-size="36">⚪</text></g>
-      <g transform="translate(144,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#hazel)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟠</text></g>
-      <g transform="translate(216,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
-      <g transform="translate(288,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#pecan)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟡</text></g>
-      <g transform="translate(360,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#walnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🥜</text></g>
-      <g transform="translate(432,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#acorn)"/><text x="36" y="55" text-anchor="middle" font-size="36">🌰</text></g>
-      <g transform="translate(504,504)"><rect x="2" y="2" width="68" height="68" rx="8" fill="url(#chestnut)"/><text x="36" y="55" text-anchor="middle" font-size="36">🟤</text></g>
+      <!-- Row 0 -->
+      <g>
+        <g><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><path d="M 50,6 Q 52,35 60,60 Q 70,76 82,82 L 18,82 Q 30,76 40,60 Q 48,35 50,6 Z" fill="url(#hatG)" stroke="#0b0420" stroke-width="2"/>
+           <ellipse cx="50" cy="84" rx="42" ry="8" fill="#2a1454" stroke="#0b0420" stroke-width="2"/>
+           <rect x="44" y="70" width="12" height="12" rx="1.5" fill="#ffd764" stroke="#7a5208"/>
+           <path d="M 40,35 l2,4 l4,1 l-3,3 l1,4 l-4,-2 l-4,2 l1,-4 l-3,-3 l4,-1 z" fill="#ffd764"/></g></g>
+        <g transform="translate(72,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#wand-bg)"/>
+           <g transform="translate(6,6) scale(0.58) rotate(-35 50 50)"><rect x="46" y="12" width="8" height="76" rx="3" fill="url(#wandG)"/>
+           <circle cx="50" cy="14" r="16" fill="#fff" opacity="0.35"/><circle cx="50" cy="14" r="4" fill="#fff"/></g></g>
+        <g transform="translate(144,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#pot-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><path d="M 42,26 L 42,46 Q 24,52 22,74 Q 20,94 50,94 Q 80,94 78,74 Q 76,52 58,46 L 58,26 Z" fill="url(#potG)" stroke="#051a10" stroke-width="2"/>
+           <rect x="42" y="8" width="16" height="16" rx="2" fill="#8b6614"/>
+           <ellipse cx="38" cy="68" rx="4" ry="10" fill="#fff" opacity="0.4"/></g></g>
+        <g transform="translate(216,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><path d="M 32,48 Q 8,30 4,46 Q 6,58 22,56 Z" fill="#fff" opacity="0.85"/>
+           <path d="M 68,48 Q 92,30 96,46 Q 94,58 78,56 Z" fill="#fff" opacity="0.85"/>
+           <circle cx="50" cy="52" r="18" fill="url(#snitchG)" stroke="#5a4208" stroke-width="1.5"/></g></g>
+        <g transform="translate(288,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#book-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><rect x="14" y="12" width="72" height="74" rx="3" fill="url(#bookG)"/>
+           <g transform="translate(50,49)" fill="none" stroke="#ffd764" stroke-width="2"><circle r="14"/><path d="M 0,-14 L 8.3,11.3 L -13.3,-4.3 L 13.3,-4.3 L -8.3,11.3 Z"/></g></g></g>
+        <g transform="translate(360,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#ball-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><circle cx="50" cy="46" r="30" fill="url(#ballG)" stroke="#0f0520"/>
+           <ellipse cx="40" cy="34" rx="8" ry="12" fill="#fff" opacity="0.55"/></g></g>
+        <g transform="translate(432,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><path d="M 50,6 Q 52,35 60,60 Q 70,76 82,82 L 18,82 Q 30,76 40,60 Q 48,35 50,6 Z" fill="url(#hatG)" stroke="#0b0420" stroke-width="2"/>
+           <ellipse cx="50" cy="84" rx="42" ry="8" fill="#2a1454"/></g></g>
+        <g transform="translate(504,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#pot-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><path d="M 42,26 L 42,46 Q 24,52 22,74 Q 20,94 50,94 Q 80,94 78,74 Q 76,52 58,46 L 58,26 Z" fill="url(#potG)"/>
+           <rect x="42" y="8" width="16" height="16" rx="2" fill="#8b6614"/></g></g>
+      </g>
+      <!-- Row 1 -->
+      <g transform="translate(0,72)">
+        <g><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><circle cx="50" cy="52" r="18" fill="url(#snitchG)"/></g></g>
+        <g transform="translate(72,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#book-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><rect x="14" y="12" width="72" height="74" rx="3" fill="url(#bookG)"/></g></g>
+        <g transform="translate(144,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#ball-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><circle cx="50" cy="46" r="30" fill="url(#ballG)"/></g></g>
+        <!-- Patronus special -->
+        <g transform="translate(216,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#patronusG)" filter="url(#glow)"/>
+           <text x="36" y="56" text-anchor="middle" font-size="40" fill="#fff">✨</text></g>
+        <g transform="translate(288,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><path d="M 50,6 Q 52,35 60,60 Q 70,76 82,82 L 18,82 Q 30,76 40,60 Q 48,35 50,6 Z" fill="url(#hatG)"/></g></g>
+        <g transform="translate(360,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#wand-bg)"/>
+           <g transform="translate(6,6) scale(0.58) rotate(-35 50 50)"><rect x="46" y="12" width="8" height="76" rx="3" fill="url(#wandG)"/><circle cx="50" cy="14" r="4" fill="#fff"/></g></g>
+        <g transform="translate(432,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><circle cx="50" cy="52" r="18" fill="url(#snitchG)"/></g></g>
+        <g transform="translate(504,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#book-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><rect x="14" y="12" width="72" height="74" rx="3" fill="url(#bookG)"/></g></g>
+      </g>
+      <!-- Row 2 with selected -->
+      <g transform="translate(0,144)">
+        <g><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#pot-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><path d="M 42,26 L 42,46 Q 24,52 22,74 Q 20,94 50,94 Q 80,94 78,74 Q 76,52 58,46 L 58,26 Z" fill="url(#potG)"/></g></g>
+        <g transform="translate(72,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#ball-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><circle cx="50" cy="46" r="30" fill="url(#ballG)"/></g></g>
+        <!-- Bombarda (striped) -->
+        <g transform="translate(144,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#wand-bg)"/>
+           <rect x="8" y="8" width="56" height="56" rx="5" fill="url(#wandG)" opacity="0.3"/>
+           <rect x="8" y="14" width="56" height="6" fill="#ffd764" opacity="0.5"/>
+           <rect x="8" y="30" width="56" height="6" fill="#ffd764" opacity="0.5"/>
+           <rect x="8" y="46" width="56" height="6" fill="#ffd764" opacity="0.5"/></g>
+        <g transform="translate(216,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)" stroke="#ffd764" stroke-width="3"/>
+           <g transform="translate(6,6) scale(0.58)"><path d="M 50,6 Q 52,35 60,60 Q 70,76 82,82 L 18,82 Q 30,76 40,60 Q 48,35 50,6 Z" fill="url(#hatG)"/></g></g>
+        <g transform="translate(288,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><path d="M 50,6 Q 52,35 60,60 Q 70,76 82,82 L 18,82 Q 30,76 40,60 Q 48,35 50,6 Z" fill="url(#hatG)"/></g></g>
+        <g transform="translate(360,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><path d="M 50,6 Q 52,35 60,60 Q 70,76 82,82 L 18,82 Q 30,76 40,60 Q 48,35 50,6 Z" fill="url(#hatG)"/></g></g>
+        <g transform="translate(432,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><circle cx="50" cy="52" r="18" fill="url(#snitchG)"/></g></g>
+        <g transform="translate(504,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#book-bg)"/>
+           <g transform="translate(6,6) scale(0.58)"><rect x="14" y="12" width="72" height="74" rx="3" fill="url(#bookG)"/></g></g>
+      </g>
+      <!-- Rows 3-7: simpler fill using colored rects for visual density -->
+      <g transform="translate(0,216)">
+        <g><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#wand-bg)"/></g>
+        <g transform="translate(72,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)"/></g>
+        <g transform="translate(144,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#book-bg)"/></g>
+        <g transform="translate(216,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#pot-bg)"/></g>
+        <!-- wrapped / Incendio -->
+        <g transform="translate(288,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="#8b1e3f" stroke="#ff6b35" stroke-width="3" filter="url(#glow)"/>
+           <text x="36" y="56" text-anchor="middle" font-size="36">💥</text></g>
+        <g transform="translate(360,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/></g>
+        <g transform="translate(432,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#ball-bg)"/></g>
+        <g transform="translate(504,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#wand-bg)"/></g>
+      </g>
+      <!-- Row 4 with jinx -->
+      <g transform="translate(0,288)">
+        <g><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#ball-bg)"/></g>
+        <g transform="translate(72,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/>
+          <rect x="2" y="2" width="68" height="68" rx="9" fill="url(#bg)" opacity="0.7"/>
+          <g stroke="#6b21a8" stroke-width="3" opacity="0.9">
+            <line x1="2" y1="14" x2="70" y2="14"/><line x1="2" y1="28" x2="70" y2="28"/>
+            <line x1="2" y1="42" x2="70" y2="42"/><line x1="2" y1="56" x2="70" y2="56"/>
+          </g></g>
+        <g transform="translate(144,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)"/></g>
+        <g transform="translate(216,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#book-bg)"/></g>
+        <g transform="translate(288,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#wand-bg)"/></g>
+        <g transform="translate(360,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#pot-bg)"/></g>
+        <g transform="translate(432,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/></g>
+        <g transform="translate(504,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)"/></g>
+      </g>
+      <g transform="translate(0,360)">
+        <g><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#book-bg)"/></g>
+        <g transform="translate(72,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#pot-bg)"/></g>
+        <!-- golden snitch marker -->
+        <g transform="translate(144,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)" stroke="#ffd764" stroke-width="3" filter="url(#glow)"/>
+           <g transform="translate(6,6) scale(0.58)"><circle cx="50" cy="52" r="18" fill="url(#snitchG)"/></g>
+           <text x="60" y="22" font-size="20">👑</text></g>
+        <g transform="translate(216,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/></g>
+        <g transform="translate(288,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#ball-bg)"/></g>
+        <g transform="translate(360,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#wand-bg)"/></g>
+        <g transform="translate(432,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#book-bg)"/></g>
+        <g transform="translate(504,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)"/></g>
+      </g>
+      <g transform="translate(0,432)">
+        <g><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)"/></g>
+        <g transform="translate(72,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#book-bg)"/></g>
+        <g transform="translate(144,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#wand-bg)"/></g>
+        <g transform="translate(216,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#pot-bg)"/></g>
+        <g transform="translate(288,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/></g>
+        <g transform="translate(360,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)"/></g>
+        <g transform="translate(432,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#ball-bg)"/></g>
+        <g transform="translate(504,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#book-bg)"/></g>
+      </g>
+      <g transform="translate(0,504)">
+        <g><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/></g>
+        <g transform="translate(72,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#wand-bg)"/></g>
+        <g transform="translate(144,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#ball-bg)"/></g>
+        <g transform="translate(216,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#snitch-bg)"/></g>
+        <g transform="translate(288,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#book-bg)"/></g>
+        <g transform="translate(360,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#hat-bg)"/></g>
+        <g transform="translate(432,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#pot-bg)"/></g>
+        <g transform="translate(504,0)"><rect x="2" y="2" width="68" height="68" rx="9" fill="url(#wand-bg)"/></g>
+      </g>
     </g>
   </g>
 
   <!-- combo popup -->
-  <text x="600" y="500" text-anchor="middle" font-size="56" font-weight="900" fill="#ffd764" filter="url(#glow)" opacity="0.9">SPELLBINDING!</text>
+  <text x="600" y="500" text-anchor="middle" font-size="56" font-weight="900" fill="#ffd764" filter="url(#glow)" opacity="0.95">SPELLBINDING!</text>
 
-  <text x="600" y="800" text-anchor="middle" font-size="14" fill="#d9c79a" font-style="italic" letter-spacing="2">CHAPTER 7 — GREAT HALL PANTRY</text>
+  <text x="600" y="830" text-anchor="middle" font-size="14" fill="#d9c79a" font-style="italic" letter-spacing="3">CHAPTER 7 — GREAT HALL PANTRY</text>
 </svg>

@@ -1,9 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" font-family="Georgia, 'Palatino', serif">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="20%" r="80%">
-      <stop offset="0%" stop-color="#2b1a4a"/>
-      <stop offset="40%" stop-color="#1a0d2e"/>
-      <stop offset="100%" stop-color="#0f0720"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#1a0e38"/>
+      <stop offset="55%" stop-color="#0e0621"/>
+      <stop offset="100%" stop-color="#05020e"/>
+    </linearGradient>
+    <linearGradient id="goldText" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#ffe68a"/>
+      <stop offset="50%" stop-color="#f4c542"/>
+      <stop offset="100%" stop-color="#a37e1a"/>
+    </linearGradient>
+    <linearGradient id="crimsonText" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#ff9bbf"/>
+      <stop offset="50%" stop-color="#c4325c"/>
+      <stop offset="100%" stop-color="#6b0f29"/>
+    </linearGradient>
+    <radialGradient id="moonHalo" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="rgba(255,236,170,0.55)"/>
+      <stop offset="40%" stop-color="rgba(255,236,170,0.15)"/>
+      <stop offset="100%" stop-color="rgba(255,236,170,0)"/>
+    </radialGradient>
+    <radialGradient id="moon" cx="40%" cy="40%">
+      <stop offset="0%" stop-color="#fff6d0"/>
+      <stop offset="70%" stop-color="#f5dd88"/>
+      <stop offset="100%" stop-color="#b89244"/>
     </radialGradient>
     <linearGradient id="btnPrimary" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#c4325c"/>
@@ -13,56 +33,141 @@
       <stop offset="0%" stop-color="#3b2766"/>
       <stop offset="100%" stop-color="#2a1a4a"/>
     </linearGradient>
+    <linearGradient id="fog" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(40,22,70,0)"/>
+      <stop offset="60%" stop-color="rgba(40,22,70,0.55)"/>
+      <stop offset="100%" stop-color="rgba(20,10,40,0.9)"/>
+    </linearGradient>
     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="strongGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
 
   <rect width="1200" height="675" fill="url(#bg)"/>
 
-  <!-- starfield -->
-  <g fill="#fff" opacity="0.7">
-    <circle cx="80"  cy="120" r="1.2"/>
-    <circle cx="200" cy="60"  r="1"/>
-    <circle cx="350" cy="180" r="1.4"/>
-    <circle cx="520" cy="90"  r="1"/>
-    <circle cx="680" cy="220" r="1.2"/>
-    <circle cx="820" cy="60"  r="1"/>
-    <circle cx="980" cy="160" r="1.6"/>
-    <circle cx="1100" cy="100" r="1"/>
-    <circle cx="120" cy="540" r="1"/>
-    <circle cx="280" cy="600" r="1.4"/>
-    <circle cx="450" cy="560" r="1"/>
-    <circle cx="640" cy="610" r="1.2"/>
-    <circle cx="800" cy="540" r="1"/>
-    <circle cx="950" cy="600" r="1.4"/>
-    <circle cx="1100" cy="560" r="1"/>
+  <!-- stars -->
+  <g fill="#fff" opacity="0.55">
+    <circle cx="80"  cy="120" r="1.2"/><circle cx="200" cy="60"  r="1"/>
+    <circle cx="350" cy="180" r="1.4"/><circle cx="520" cy="90"  r="1"/>
+    <circle cx="680" cy="220" r="1.2"/><circle cx="820" cy="60"  r="1"/>
+    <circle cx="140" cy="260" r="0.9"/><circle cx="280" cy="320" r="1.1"/>
+    <circle cx="1040" cy="100" r="1"/><circle cx="1140" cy="180" r="1.2"/>
   </g>
   <g fill="#ffd764">
     <circle cx="240" cy="160" r="2"/>
-    <circle cx="780" cy="180" r="2"/>
-    <circle cx="180" cy="620" r="2.4"/>
-    <circle cx="980" cy="500" r="2"/>
+    <circle cx="1060" cy="220" r="2"/>
+    <circle cx="180" cy="320" r="1.6"/>
+  </g>
+
+  <!-- moon -->
+  <circle cx="950" cy="150" r="180" fill="url(#moonHalo)"/>
+  <circle cx="950" cy="150" r="42" fill="url(#moon)"/>
+
+  <!-- far mountains -->
+  <path d="M 0,450 L 120,380 L 220,420 L 320,360 L 440,420 L 560,380 L 700,430 L 820,370 L 940,420 L 1080,380 L 1200,430 L 1200,675 L 0,675 Z" fill="#0a0822"/>
+  <!-- mid mountains -->
+  <path d="M 0,500 L 100,440 L 220,490 L 340,430 L 460,480 L 580,450 L 700,490 L 820,440 L 940,480 L 1080,440 L 1200,490 L 1200,675 L 0,675 Z" fill="#0f0729"/>
+
+  <!-- castle silhouette -->
+  <g fill="#0c0620" transform="translate(260,520)">
+    <!-- cliff -->
+    <path d="M -230,0 L -210,-30 L -110,-40 L 20,-55 L 140,-40 L 220,-30 L 240,0 L 240,155 L -230,155 Z" fill="#05020e"/>
+    <!-- walls -->
+    <rect x="-220" y="-55" width="460" height="80" />
+    <rect x="-180" y="-80" width="380" height="30" />
+    <!-- battlements -->
+    <g>
+      <rect x="-220" y="-60" width="10" height="14"/><rect x="-200" y="-60" width="10" height="14"/>
+      <rect x="-180" y="-60" width="10" height="14"/><rect x="-160" y="-60" width="10" height="14"/>
+      <rect x="-140" y="-60" width="10" height="14"/><rect x="-120" y="-60" width="10" height="14"/>
+      <rect x="-100" y="-60" width="10" height="14"/><rect x="-80" y="-60" width="10" height="14"/>
+      <rect x="-60" y="-60" width="10" height="14"/><rect x="-40" y="-60" width="10" height="14"/>
+      <rect x="-20" y="-60" width="10" height="14"/><rect x="0" y="-60" width="10" height="14"/>
+      <rect x="20" y="-60" width="10" height="14"/><rect x="40" y="-60" width="10" height="14"/>
+      <rect x="60" y="-60" width="10" height="14"/><rect x="80" y="-60" width="10" height="14"/>
+      <rect x="100" y="-60" width="10" height="14"/><rect x="120" y="-60" width="10" height="14"/>
+      <rect x="140" y="-60" width="10" height="14"/><rect x="160" y="-60" width="10" height="14"/>
+      <rect x="180" y="-60" width="10" height="14"/><rect x="200" y="-60" width="10" height="14"/>
+      <rect x="220" y="-60" width="10" height="14"/>
+    </g>
+    <!-- central big keep -->
+    <rect x="-30" y="-230" width="60" height="200"/>
+    <polygon points="-45,-230 0,-300 45,-230"/>
+    <rect x="-1" y="-320" width="2" height="20"/>
+    <polygon points="0,-318 26,-308 0,-298"/>
+    <!-- left tower -->
+    <rect x="-150" y="-180" width="40" height="130"/>
+    <polygon points="-160,-180 -130,-240 -100,-180"/>
+    <!-- right tower -->
+    <rect x="100" y="-210" width="44" height="160"/>
+    <polygon points="90,-210 122,-280 154,-210"/>
+    <!-- far left small tower -->
+    <rect x="-210" y="-130" width="28" height="80"/>
+    <polygon points="-215,-130 -196,-172 -177,-130"/>
+    <!-- far right small tower -->
+    <rect x="175" y="-150" width="32" height="100"/>
+    <polygon points="170,-150 191,-198 212,-150"/>
+
+    <!-- lit windows -->
+    <g fill="#ffc864" filter="url(#glow)">
+      <rect x="-5"  y="-215" width="10" height="14"/>
+      <rect x="-5"  y="-180" width="10" height="14"/>
+      <rect x="-5"  y="-140" width="10" height="14"/>
+      <rect x="-5"  y="-100" width="10" height="14"/>
+      <rect x="-135" y="-145" width="10" height="14"/>
+      <rect x="-135" y="-105" width="10" height="14"/>
+      <rect x="117" y="-180" width="10" height="14"/>
+      <rect x="117" y="-135" width="10" height="14"/>
+      <rect x="117" y="-90"  width="10" height="14"/>
+      <rect x="-202" y="-100" width="8" height="12"/>
+      <rect x="186" y="-120" width="10" height="14"/>
+      <rect x="-120" y="-40" width="9" height="12"/>
+      <rect x="100"  y="-40" width="9" height="12"/>
+    </g>
+    <g fill="#96c8ff" opacity="0.85" filter="url(#glow)">
+      <rect x="-5" y="-250" width="10" height="14"/>
+    </g>
+  </g>
+
+  <!-- fog band -->
+  <rect x="0" y="440" width="1200" height="235" fill="url(#fog)"/>
+
+  <!-- drifting magical particles -->
+  <g fill="#ffd764" filter="url(#glow)">
+    <circle cx="200" cy="380" r="2"/>
+    <circle cx="420" cy="320" r="1.6"/>
+    <circle cx="620" cy="260" r="2"/>
+    <circle cx="780" cy="360" r="1.8"/>
+    <circle cx="1040" cy="320" r="2"/>
+  </g>
+  <g fill="#c99bff" filter="url(#glow)">
+    <circle cx="300" cy="410" r="1.8"/>
+    <circle cx="540" cy="370" r="1.5"/>
+    <circle cx="860" cy="290" r="1.8"/>
   </g>
 
   <!-- title -->
-  <text x="600" y="180" text-anchor="middle" font-size="28" fill="#d9c79a" font-style="italic" letter-spacing="2">Charles &amp; Brandon's</text>
-  <text x="600" y="280" text-anchor="middle" font-size="86" font-weight="900" fill="#ffd764" filter="url(#glow)">Wizarding World</text>
-  <text x="600" y="320" text-anchor="middle" font-size="24" fill="#f4e9d1" font-style="italic">of</text>
-  <text x="600" y="410" text-anchor="middle" font-size="100" font-weight="900" fill="#c4325c" filter="url(#glow)">Nuts</text>
+  <text x="600" y="170" text-anchor="middle" font-size="28" fill="#d9c79a" font-style="italic" letter-spacing="4">CHARLES &amp; BRANDON'S</text>
+  <text x="600" y="280" text-anchor="middle" font-size="96" font-weight="900" fill="url(#goldText)" filter="url(#strongGlow)">Wizarding World</text>
+  <text x="600" y="320" text-anchor="middle" font-size="26" fill="#f4e9d1" font-style="italic" letter-spacing="4">of</text>
+  <text x="600" y="420" text-anchor="middle" font-size="108" font-weight="900" fill="url(#crimsonText)" filter="url(#strongGlow)">Nuts</text>
 
-  <text x="600" y="460" text-anchor="middle" font-size="22" fill="#f4e9d1" font-style="italic" opacity="0.9">A Match-3 Spellbound Adventure</text>
+  <text x="600" y="470" text-anchor="middle" font-size="22" fill="#f4e9d1" font-style="italic" letter-spacing="6" opacity="0.92">A MATCH-3 SPELLBOUND ADVENTURE</text>
 
   <!-- buttons -->
   <g>
-    <rect x="465" y="490" width="270" height="56" rx="10" fill="url(#btnPrimary)" stroke="#ffd764" stroke-width="2.5"/>
-    <text x="600" y="527" text-anchor="middle" font-size="22" font-weight="700" fill="#f4e9d1">Begin Adventure</text>
+    <rect x="460" y="500" width="280" height="58" rx="10" fill="url(#btnPrimary)" stroke="#ffd764" stroke-width="2.5" filter="url(#glow)"/>
+    <text x="600" y="538" text-anchor="middle" font-size="22" font-weight="700" fill="#f4e9d1" letter-spacing="2">Begin Adventure</text>
   </g>
   <g>
-    <rect x="500" y="558" width="200" height="44" rx="10" fill="url(#btnNormal)" stroke="#f4c542" stroke-width="2"/>
-    <text x="600" y="588" text-anchor="middle" font-size="18" font-weight="700" fill="#f4e9d1">Settings</text>
+    <rect x="500" y="572" width="200" height="42" rx="10" fill="url(#btnNormal)" stroke="#f4c542" stroke-width="2"/>
+    <text x="600" y="600" text-anchor="middle" font-size="18" font-weight="700" fill="#f4e9d1">Settings</text>
   </g>
 
-  <text x="600" y="650" text-anchor="middle" font-size="14" fill="#d9c79a" font-style="italic" opacity="0.7">Brewed by Charles &amp; Brandon in the Great Nuttery</text>
+  <text x="600" y="648" text-anchor="middle" font-size="13" fill="#d9c79a" font-style="italic" opacity="0.7" letter-spacing="2">BREWED BY CHARLES &amp; BRANDON IN THE GREAT NUTTERY</text>
 </svg>

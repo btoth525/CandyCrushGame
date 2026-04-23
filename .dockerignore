@@ -1,0 +1,11 @@
+.git
+.gitignore
+README.md
+node_modules
+android
+ios
+capacitor.config.json
+package.json
+package-lock.json
+deploy/unraid-template.xml
+.DS_Store

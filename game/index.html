@@ -4,14 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#1a0d2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nuts!">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Charles &amp; Brandon's Wizarding World of Nuts</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
   <div id="app">
 
     <div id="screen-title" class="screen active">
-      <div class="stars-bg"></div>
       <div class="title-inner">
         <h1 class="title-main">
           <span class="title-by">Charles &amp; Brandon's</span>
@@ -22,9 +30,14 @@
         <p class="tagline">A Match-3 Spellbound Adventure</p>
         <div class="title-buttons">
           <button id="btn-play" class="btn btn-primary">Begin Adventure</button>
+          <button id="btn-daily" class="btn server-only" hidden>🌙 Daily Spell</button>
+          <button id="btn-leaderboard" class="btn server-only" hidden>🏆 Leaderboards</button>
           <button id="btn-settings" class="btn">Settings</button>
+          <button id="btn-account" class="btn btn-small server-only" hidden>👤 Wizard Profile</button>
+          <a href="admin.html" class="btn btn-small">⚙ Admin Panel</a>
           <button id="btn-reset" class="btn btn-small">Reset Progress</button>
         </div>
+        <div id="online-status" class="online-status hidden"></div>
         <p class="credits">Brewed by Charles &amp; Brandon in the Great Nuttery</p>
       </div>
     </div>
@@ -41,6 +54,25 @@
       </div>
     </div>
 
+    <div id="screen-leaderboard" class="screen">
+      <header class="map-header">
+        <button id="btn-lb-back" class="btn btn-icon">◀</button>
+        <h2>🏆 Leaderboards</h2>
+        <div></div>
+      </header>
+      <div class="lb-controls">
+        <select id="lb-scope">
+          <option value="global">Global (all levels combined)</option>
+        </select>
+        <select id="lb-period">
+          <option value="all">All time</option>
+          <option value="weekly">This week</option>
+          <option value="daily">Last 24h</option>
+        </select>
+      </div>
+      <div id="lb-list" class="lb-list"></div>
+    </div>
+
     <div id="screen-game" class="screen">
       <header class="game-header">
         <button id="btn-pause" class="btn btn-icon">⏸</button>
@@ -52,6 +84,7 @@
       </header>
       <div id="objectives"></div>
       <div id="board-wrap">
+        <div class="rune-ring"></div>
         <div id="board"></div>
         <div id="fx-layer"></div>
         <div id="combo-popup"></div>
@@ -69,9 +102,13 @@
     <div id="toast" class="toast hidden"></div>
   </div>
 
+  <script src="tile-art.js"></script>
   <script src="textures.js"></script>
   <script src="levels.js"></script>
+  <script src="config.js"></script>
+  <script src="api.js"></script>
   <script src="audio.js"></script>
+  <script src="background.js"></script>
   <script src="game.js"></script>
   <script src="ui.js"></script>
   <script src="main.js"></script>
