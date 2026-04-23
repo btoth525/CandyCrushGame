@@ -36,6 +36,17 @@ NUTS.Main = (function () {
   }
 
   function applySettings() {
+    /* Admin-supplied audio defaults take precedence the very first run. */
+    if (NUTS.Config && NUTS.Config._audioDefaults) {
+      const a = NUTS.Config._audioDefaults;
+      const seenKey = 'cbwwn-audio-touched';
+      if (!localStorage.getItem(seenKey)) {
+        if (a.sfxOn   != null) settings.sfxOn   = a.sfxOn;
+        if (a.musicOn != null) settings.musicOn = a.musicOn;
+        if (a.sfxVol  != null) settings.sfxVol  = a.sfxVol;
+        if (a.musicVol != null) settings.musicVol = a.musicVol;
+      }
+    }
     audio.setSfxEnabled(settings.sfxOn);
     audio.setSfxVol(settings.sfxVol);
     audio.setMusicVol(settings.musicVol);
@@ -159,11 +170,17 @@ NUTS.Main = (function () {
 
   function init() {
     load();
+    /* Wait for optional disk config (config.json) to apply before
+     * we initialise audio/background -- so admin overrides are live. */
+    const ready = (NUTS.Config && NUTS.Config.ready) || Promise.resolve();
+    ready.then(boot);
+  }
+
+  function boot() {
     applySettings();
     wireEvents();
     const bgCanvas = document.getElementById('bg-canvas');
     if (bgCanvas && NUTS.Background) NUTS.Background.init(bgCanvas);
-    /* Respect PWA shortcut hashes: #map / #play */
     const hash = (location.hash || '').slice(1);
     if (hash === 'map' && Object.keys(progress.stars || {}).length > 0) {
       openMap();

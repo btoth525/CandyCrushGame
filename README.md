@@ -178,6 +178,20 @@ That opens Xcode. From there you can run on a simulator, sideload onto a connect
     └── build-android.sh           # One-shot APK builder
 ```
 
+## Admin Panel — GUI customisation (no code)
+
+Open **`game/admin.html`** in your browser (or click the **⚙ Admin Panel** button on the title screen). Tabs:
+
+- **🪄 Tiles** — for each of the 6 tiles: edit the name, glyph (emoji), background colour, rim colour. Drag any PNG/JPG straight onto the drop zone to set a custom tile picture; live preview updates instantly.
+- **🏰 Branding** — change the game title, tagline, and chapter prefix. Drag a castle photo onto the big drop zone to use it as the sky backdrop. Slider controls how much darkening overlay sits on top.
+- **📜 Levels** — edit each level's name, move budget, and 1★/2★/3★ score thresholds.
+- **🔊 Audio** — set default SFX/music on/off and volumes for new players.
+- **👁 Live Preview** — embedded iframe of the game; reloads on save (Cmd/Ctrl+S also saves).
+
+**Save & Apply** writes everything to your browser's `localStorage`. **Export JSON** downloads a backup file (drop it back in via **Import JSON** anywhere). **Reset Defaults** wipes all customisations.
+
+> The admin runs entirely client-side — no server, no API. Your customisations live only in **your** browser's `localStorage`. To push them to everyone visiting your hosted game, save the exported JSON as `game/config.json` and commit it; on boot the game fetches that file and applies it as the base config (any user-side admin tweaks layer on top).
+
 ## Re-skinning the game
 
 Open `game/textures.js`. Each tile is a single object:

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1a0d2e">
+<title>Wizarding Nuts — Admin Panel</title>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+<header class="admin-header">
+  <div class="admin-brand">
+    <span class="brand-bolt">⚡</span>
+    <div>
+      <h1>Wizarding Nuts <span class="muted">Admin</span></h1>
+      <p class="muted">Customise tiles, branding, levels &amp; audio</p>
+    </div>
+  </div>
+  <div class="admin-actions">
+    <button id="btn-save"   class="btn btn-primary">💾 Save &amp; Apply</button>
+    <button id="btn-export" class="btn">📤 Export JSON</button>
+    <label class="btn">📥 Import JSON
+      <input id="file-import" type="file" accept="application/json,.json" hidden>
+    </label>
+    <button id="btn-reset"  class="btn btn-danger">↺ Reset Defaults</button>
+    <a href="index.html" class="btn btn-icon" title="Back to game">🎮</a>
+  </div>
+</header>
+
+<nav class="admin-tabs">
+  <button class="tab active" data-tab="tiles">🪄 Tiles</button>
+  <button class="tab"        data-tab="branding">🏰 Branding</button>
+  <button class="tab"        data-tab="levels">📜 Levels</button>
+  <button class="tab"        data-tab="audio">🔊 Audio</button>
+  <button class="tab"        data-tab="preview">👁 Live Preview</button>
+</nav>
+
+<main class="admin-main">
+
+  <!-- ===== Tiles ===== -->
+  <section id="tab-tiles" class="tab-panel active">
+    <div class="panel-help">
+      <p>Each tile shows a live preview. Drag any image (PNG/JPG/SVG) onto the drop zone to set a custom tile picture. The image is stored in your browser only — export the JSON to back it up.</p>
+    </div>
+    <div id="tile-grid" class="tile-grid"></div>
+  </section>
+
+  <!-- ===== Branding ===== -->
+  <section id="tab-branding" class="tab-panel">
+    <div class="form-row">
+      <label>Game Title</label>
+      <input id="brand-title" type="text" maxlength="80">
+    </div>
+    <div class="form-row">
+      <label>Tagline</label>
+      <input id="brand-tagline" type="text" maxlength="80">
+    </div>
+    <div class="form-row">
+      <label>Chapter Prefix</label>
+      <input id="brand-prefix" type="text" maxlength="20" placeholder="Chapter">
+    </div>
+
+    <h3 class="section-h">Castle Backdrop Photo</h3>
+    <p class="muted">Drop your own licensed castle photo (your own photography, CC0 from Unsplash, or CC-BY from Wikimedia Commons). The hand-drawn castle scene auto-hides when a photo is loaded; the canvas effects (moon, aurora, lightning, candles, particles) still overlay for atmosphere.</p>
+    <div id="bg-drop" class="image-drop large">
+      <div class="image-drop-inner">
+        <div class="drop-icon">🏰</div>
+        <div class="drop-label">Drop image here or click to choose</div>
+        <input type="file" accept="image/*" hidden>
+      </div>
+      <img id="bg-preview" alt="" hidden>
+      <button id="bg-clear" class="btn btn-small btn-danger" hidden>Remove</button>
+    </div>
+
+    <div class="form-row">
+      <label>Backdrop overlay darkness <span id="bg-op-label">0.45</span></label>
+      <input id="brand-bg-opacity" type="range" min="0" max="0.85" step="0.05" value="0.45">
+      <p class="muted small">Higher = darker overlay, more readable game UI on bright photos.</p>
+    </div>
+  </section>
+
+  <!-- ===== Levels ===== -->
+  <section id="tab-levels" class="tab-panel">
+    <div class="panel-help">
+      <p>Edit names, moves, and score-star thresholds for each level. Objectives are JSON-edit only (advanced). Use the import/export buttons up top to back up complex changes.</p>
+    </div>
+    <div id="level-list" class="level-list"></div>
+  </section>
+
+  <!-- ===== Audio ===== -->
+  <section id="tab-audio" class="tab-panel">
+    <div class="form-row">
+      <label>Sound effects on by default</label>
+      <input id="audio-sfx" type="checkbox" class="big-check">
+    </div>
+    <div class="form-row">
+      <label>Background music on by default</label>
+      <input id="audio-music" type="checkbox" class="big-check">
+    </div>
+    <div class="form-row">
+      <label>SFX volume <span id="vol-sfx-label">0.7</span></label>
+      <input id="audio-sfx-vol" type="range" min="0" max="1" step="0.05" value="0.7">
+    </div>
+    <div class="form-row">
+      <label>Music volume <span id="vol-music-label">0.35</span></label>
+      <input id="audio-music-vol" type="range" min="0" max="1" step="0.05" value="0.35">
+    </div>
+  </section>
+
+  <!-- ===== Live Preview ===== -->
+  <section id="tab-preview" class="tab-panel">
+    <div class="preview-wrap">
+      <div class="preview-toolbar">
+        <button id="btn-preview-reload" class="btn btn-small">🔄 Reload preview</button>
+        <span class="muted">Changes apply after Save. Use ⌘/Ctrl+S as a shortcut.</span>
+      </div>
+      <iframe id="preview-frame" src="index.html" title="Live preview"></iframe>
+    </div>
+  </section>
+
+</main>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="tile-art.js"></script>
+<script src="textures.js"></script>
+<script src="levels.js"></script>
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
