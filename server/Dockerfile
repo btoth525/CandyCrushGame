@@ -1,31 +1,47 @@
-# Wizarding Nuts -- server mode (Node + SQLite + static).
-# Single container that serves the game AND the API.
+# Wizarding Nuts -- single-container build (Node + SQLite + static).
+# Multi-stage: build deps in stage 1, slim runtime in stage 2.
 
-FROM node:22-alpine
+# ============ Stage 1: install deps ============
+FROM node:22-alpine AS deps
 
-# better-sqlite3 needs a tiny build toolchain on alpine.
+# Build toolchain for better-sqlite3's native bindings (used only when
+# no prebuilt is available for the target platform). Lives only in this
+# layer and is discarded.
 RUN apk add --no-cache python3 make g++
 
+WORKDIR /app/server
+
+COPY server/package.json ./package.json
+RUN npm install --omit=dev --no-audit --no-fund \
+ && npm cache clean --force
+
+# ============ Stage 2: runtime ============
+FROM node:22-alpine AS runtime
+
+# Tiny runtime: no build tools, just node + the compiled deps + the app.
 WORKDIR /app
 
-# Install deps first for layer caching.
-COPY server/package.json ./server/package.json
-RUN cd server && npm install --omit=dev --no-audit --no-fund
-
-# Copy server + game.
+COPY --from=deps /app/server/node_modules ./server/node_modules
 COPY server/   ./server/
 COPY game/     ./game/
 
-# Strip build tools to keep image slim (deps are now compiled).
-RUN apk del python3 make g++
-
-ENV NODE_ENV=production
-ENV PORT=3000
-ENV DATA_DIR=/data
-ENV STATIC_DIR=/app/game
+ENV NODE_ENV=production \
+    PORT=3000 \
+    DATA_DIR=/data \
+    STATIC_DIR=/app/game
 
 EXPOSE 3000
 VOLUME ["/data"]
 
 WORKDIR /app/server
+
+# Drop to non-root user for principle of least privilege
+RUN addgroup -S app && adduser -S app -G app \
+ && mkdir -p /data \
+ && chown -R app:app /data
+USER app
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD wget -q --spider http://localhost:3000/api/ping || exit 1
+
 CMD ["node", "server.js"]

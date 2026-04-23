@@ -1,0 +1,86 @@
+# Build and publish the Wizarding Nuts container to GitHub Container Registry.
+#
+# Image:  ghcr.io/<owner>/wizarding-nuts
+# Tags:   latest (default branch only), <branch-name>, sha-<short>, semver if tagged
+# Arches: linux/amd64 (Unraid x86_64), linux/arm64 (Raspberry Pi 4/5, Apple silicon)
+#
+# After the first successful run, visit:
+#   https://github.com/users/<owner>/packages/container/wizarding-nuts/settings
+# and set "Package visibility" to Public if you want anonymous pulls (so
+# Unraid users do not need a PAT).
+
+name: Publish container to GHCR
+
+on:
+  push:
+    branches:
+      - main
+      - "claude/**"
+    tags:
+      - "v*.*.*"
+    paths:
+      - "server/**"
+      - "game/**"
+      - ".github/workflows/docker-publish.yml"
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/wizarding-nuts
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lower-case image name
+        id: imgname
+        run: echo "name=$(echo '${{ env.IMAGE_NAME }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Set up QEMU (multi-arch)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ steps.imgname.outputs.name }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=sha,format=short
+          labels: |
+            org.opencontainers.image.title=Wizarding Nuts
+            org.opencontainers.image.description=Match-3 spellbound adventure with leaderboards, accounts, cloud save, daily challenge, and a GUI admin panel. Single container.
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.licenses=MIT
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./server/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: false

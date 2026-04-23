@@ -1,37 +1,41 @@
 <?xml version="1.0"?>
 <!--
-  Unraid Community Applications template for Wizarding Nuts (server mode).
+  Unraid Community Applications template for Wizarding Nuts.
 
-  This template runs the FULL stack in a single container:
-    - The match-3 game (static frontend)
-    - The admin panel
-    - The /api/* backend (accounts, leaderboards, cloud save, daily challenge)
-    - SQLite database persisted to /mnt/user/appdata/wizarding-nuts/
+  Image is published automatically to GHCR by .github/workflows/docker-publish.yml
+  on every push to the main / claude branches. Image:
+    ghcr.io/btoth525/wizarding-nuts:latest      (multi-arch: amd64 + arm64)
 
-  HOW TO INSTALL:
-    1. Build and push the image to Docker Hub or GHCR ONE TIME from the repo root:
-         docker build -f server/Dockerfile -t YOURNAME/wizarding-nuts:latest .
-         docker push YOURNAME/wizarding-nuts:latest
-       (Or run `docker compose up -d --build` from the repo on Unraid directly.)
-    2. Edit the <Repository> tag below to your image.
-    3. Copy this file to /boot/config/plugins/dockerMan/templates-user/
-    4. Open the Docker tab -> "Add Container" -> choose "Wizarding-Nuts" template.
-    5. Set ADMIN_TOKEN to a long random string -- this unlocks "Push to Server"
-       in the admin panel.
-    6. Apply. Visit http://[UNRAID-IP]:8080
+  ON UNRAID, INSTALL IN THREE STEPS:
+
+  1. Download this XML to your Unraid server:
+       wget -O /boot/config/plugins/dockerMan/templates-user/wizarding-nuts.xml \
+         https://raw.githubusercontent.com/btoth525/CandyCrushGame/claude/match-3-game-SHJ92/deploy/unraid-template.xml
+
+  2. (One-time) make the GHCR package public so Unraid can pull anonymously:
+       https://github.com/users/btoth525/packages/container/wizarding-nuts/settings
+       -> Danger Zone -> Change visibility -> Public
+     (If you keep it private, set up a Docker Hub-style credential in Unraid
+      pointing at ghcr.io with username `btoth525` and a personal access token.)
+
+  3. In Unraid web UI: Docker tab -> "Add Container" -> Template dropdown ->
+     "Wizarding-Nuts". Set ADMIN_TOKEN to a long random string (this unlocks
+     "Push to Server" in the admin panel). Apply.
 -->
 <Container version="2">
   <Name>Wizarding-Nuts</Name>
-  <Repository>yourname/wizarding-nuts:latest</Repository>
-  <Registry>https://hub.docker.com/</Registry>
+  <Repository>ghcr.io/btoth525/wizarding-nuts:latest</Repository>
+  <Registry>https://github.com/btoth525/CandyCrushGame/pkgs/container/wizarding-nuts</Registry>
   <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
   <Privileged>false</Privileged>
-  <Support/>
-  <Project/>
+  <Support>https://github.com/btoth525/CandyCrushGame/issues</Support>
+  <Project>https://github.com/btoth525/CandyCrushGame</Project>
   <Overview>Charles &amp; Brandon's Wizarding World of Nuts -- a match-3 web game with global leaderboards, accounts, cloud save sync, daily challenges, and a GUI admin panel. Single container: frontend + admin + Node API + SQLite all in one.</Overview>
   <Category>GameServers: Other:</Category>
   <WebUI>http://[IP]:[PORT:3000]/</WebUI>
-  <TemplateURL/>
+  <TemplateURL>https://raw.githubusercontent.com/btoth525/CandyCrushGame/claude/match-3-game-SHJ92/deploy/unraid-template.xml</TemplateURL>
   <Icon>https://raw.githubusercontent.com/btoth525/CandyCrushGame/claude/match-3-game-SHJ92/game/icons/icon-512.png</Icon>
   <ExtraParams/>
   <PostArgs/>
@@ -39,7 +43,7 @@
   <DateInstalled>0</DateInstalled>
   <DonateText/>
   <DonateLink/>
-  <Description>A match-3 spellbound adventure with global leaderboards, daily challenges, cloud save, and a full admin UI -- all packed into one Docker container. SQLite database persists to /data inside the container; mount it to your Unraid appdata share.</Description>
+  <Description>A match-3 spellbound adventure with global leaderboards, daily challenges, cloud save, and a full admin UI -- all packed into one Docker container. SQLite database persists to /data inside the container; mount it to your Unraid appdata share so leaderboards survive container rebuilds.</Description>
 
   <Networking>
     <Mode>bridge</Mode>
@@ -84,7 +88,7 @@
           Target="3000"
           Default="8080"
           Mode="tcp"
-          Description="Port the game + API listens on (host side)"
+          Description="Port the game + API listens on (host side). Visit http://UNRAID-IP:THIS-PORT after install."
           Type="Port"
           Display="always"
           Required="true"
@@ -94,7 +98,7 @@
           Target="/data"
           Default="/mnt/user/appdata/wizarding-nuts"
           Mode="rw"
-          Description="Host folder for the SQLite database and server-published config.json"
+          Description="Host folder for the SQLite database (wizarding.db) and any server-published config (config.json). Back this up to keep your leaderboards safe."
           Type="Path"
           Display="always"
           Required="true"
@@ -104,7 +108,7 @@
           Target="ADMIN_TOKEN"
           Default=""
           Mode=""
-          Description="Set a long random string to enable 'Push to Server' in the admin panel. Leave blank to disable server-side admin push entirely. Generate one with: openssl rand -hex 32"
+          Description="Set a long random string to enable 'Push to Server' in the in-game admin panel. Leave blank to disable server-side admin push entirely. Generate one with:  openssl rand -hex 32"
           Type="Variable"
           Display="always"
           Required="false"

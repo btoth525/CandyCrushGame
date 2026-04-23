@@ -42,31 +42,51 @@ cd game && python3 -m http.server 8000
 
 ---
 
-## Hosting on Unraid (Docker)
+## Hosting on Unraid (one container, prebuilt image)
 
-The repo ships with two deployment profiles — pick one:
+The container is **published to GHCR automatically** by `.github/workflows/docker-publish.yml` on every push to `main` and `claude/**`. Multi-arch (`amd64` + `arm64`).
 
-| Profile | Use when | Container | Features |
-|---------|----------|-----------|----------|
-| `static` | You want the simplest possible deploy and don't need leaderboards | `nginx:alpine`, ~25 MB | The game itself, fully playable, localStorage save |
-| `server` | You want global leaderboards, accounts, cloud save sync, daily challenge | Node + SQLite, ~100 MB | Everything in `static` PLUS `/api/*` backend |
-
-### Server mode (recommended — has leaderboards)
-
-```bash
-docker compose --profile server up -d --build
-# (or just: docker compose up -d --build  -- server is the default profile)
+```
+ghcr.io/btoth525/wizarding-nuts:latest
 ```
 
-Visit `http://<unraid-ip>:8080`. The container persists its SQLite database to `./data/wizarding.db` on the host, so your leaderboards survive container rebuilds. Mount that folder somewhere durable on your Unraid array.
-
-### Static mode (no leaderboards)
+### Easiest install — Unraid template
 
 ```bash
-docker compose --profile static up -d --build
+# On your Unraid box (one-time):
+wget -O /boot/config/plugins/dockerMan/templates-user/wizarding-nuts.xml \
+  https://raw.githubusercontent.com/btoth525/CandyCrushGame/claude/match-3-game-SHJ92/deploy/unraid-template.xml
 ```
 
-Same URL, no backend. Useful if you just want a single-player game with zero state on the server.
+Then in the Unraid web UI: **Docker tab → Add Container → Template dropdown → Wizarding-Nuts**. Set `ADMIN_TOKEN` to a random string (`openssl rand -hex 32` to generate). Hit Apply. Visit `http://<unraid-ip>:8080`.
+
+> **One-time GHCR setting**: after the first GitHub Actions run, the container package starts as **private**. Visit https://github.com/users/btoth525/packages/container/wizarding-nuts/settings → Danger Zone → Change visibility → **Public**. That lets Unraid pull anonymously. (If you'd rather keep it private, set up an Unraid Docker Hub-style credential pointing at `ghcr.io` with username `btoth525` and a personal access token with `read:packages` scope.)
+
+### Plain Docker (anywhere)
+
+```bash
+docker run -d --name wizarding-nuts \
+  -p 8080:3000 \
+  -v /mnt/user/appdata/wizarding-nuts:/data \
+  -e ADMIN_TOKEN=$(openssl rand -hex 32) \
+  --restart unless-stopped \
+  ghcr.io/btoth525/wizarding-nuts:latest
+```
+
+That's it. One container holds:
+- The match-3 game frontend
+- The admin panel
+- The Express API (accounts, leaderboards, cloud save, daily challenge)
+- The SQLite database, persisted to `/data`
+
+### Build locally instead of pulling
+
+```bash
+docker compose up -d --build           # server mode (default)
+docker compose --profile static up -d  # legacy static-only mode
+```
+
+The `static` profile is the old nginx-only image (no leaderboards). Useful if you want a single-player deploy without a Node process running.
 
 ### Option B — Unraid Docker tab template
 
