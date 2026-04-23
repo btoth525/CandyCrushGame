@@ -123,7 +123,9 @@ function publicUser(u) {
 const app = express();
 app.disable('x-powered-by');
 app.use(compression());
-app.use(express.json({ limit: '256kb' }));
+/* 30MB JSON body cap -- admin config can carry backdrop + tile images
+ * as data URLs. Everything else (scores, names, saves) is tiny. */
+app.use(express.json({ limit: '30mb' }));
 
 /* Tiny in-memory rate limiter (per IP, per minute) */
 const RATE = new Map();
@@ -419,23 +421,11 @@ function adminAuth(req) {
   return false;
 }
 
-/* Admin-page lockdown: when ADMIN_TOKEN is set, the admin UI files
- * (admin.html, admin.css, admin.js) require Basic Auth before being
- * served. Without an admin token configured, access is open (the
- * dangerous server endpoints remain locked regardless). */
-function requireAdminPage(req, res, next) {
-  if (!ADMIN_TOKEN) return next();
-  if (adminAuth(req)) return next();
-  res.set('WWW-Authenticate', 'Basic realm="Wizarding Nuts Admin", charset="UTF-8"');
-  res.status(401).send('Authentication required to access the admin panel.');
-}
-
-app.use((req, res, next) => {
-  if (/^\/admin(\.html|\.css|\.js)?$/.test(req.path)) {
-    return requireAdminPage(req, res, next);
-  }
-  next();
-});
+/* Admin page is publicly reachable; the UI itself shows a password
+ * overlay (see admin.js) when the server reports ADMIN_TOKEN is set.
+ * All dangerous endpoints (/api/admin/*) still require the token
+ * server-side, so unauthenticated visitors can only look at the UI
+ * shell, not publish anything. */
 
 app.get('/api/admin/status', (req, res) => {
   res.json({
@@ -460,7 +450,9 @@ app.put('/api/admin/config', rateLimit(60), (req, res) => {
   const cfg = req.body;
   if (!cfg || typeof cfg !== 'object') return res.status(400).json({ error: 'invalid_config' });
   const text = JSON.stringify(cfg, null, 2);
-  if (text.length > 8 * 1024 * 1024) return res.status(413).json({ error: 'config_too_large' });
+  /* 25MB cap -- plenty of headroom for a handful of compressed
+   * backdrop / tile images embedded as data URLs. */
+  if (text.length > 25 * 1024 * 1024) return res.status(413).json({ error: 'config_too_large' });
   fs.writeFileSync(CONFIG_PATH, text, 'utf8');
   res.json({ ok: true, size: text.length });
 });

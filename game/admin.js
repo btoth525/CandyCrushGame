@@ -87,7 +87,7 @@
           const img = drop.querySelector('img'); if (img) img.remove();
           const btn = drop.querySelector('.btn-small'); if (btn) btn.remove();
         });
-      });
+      }, { maxW: 256, quality: 0.92 });
       if (tile.image) renderImageInDrop(drop, tile.image, () => {
         tile.image = ''; rememberTile(tile); paintTilePreview(preview, tile);
         drop.querySelector('.image-drop-inner').style.display = '';
@@ -171,7 +171,7 @@
       cfg.branding.backgroundImage = dataUrl;
       showBg(dataUrl);
       toast('Backdrop loaded — Save to apply');
-    });
+    }, { maxW: 1920, quality: 0.82 });
     clearBtn.onclick = (e) => {
       e.stopPropagation();
       cfg.branding = cfg.branding || {};
@@ -266,7 +266,7 @@
   /* =========================================================
      IMAGE DROP HELPER
      ========================================================= */
-  function wireImageDrop(drop, onLoaded) {
+  function wireImageDrop(drop, onLoaded, opts) {
     const input = drop.querySelector('input[type=file]');
     drop.addEventListener('click', (e) => {
       if (e.target.tagName === 'BUTTON') return;
@@ -274,7 +274,7 @@
     });
     input.addEventListener('change', () => {
       const f = input.files && input.files[0];
-      if (f) readImage(f, onLoaded);
+      if (f) readImage(f, onLoaded, opts);
       input.value = '';
     });
     drop.addEventListener('dragover', (e) => {
@@ -286,22 +286,59 @@
       e.preventDefault();
       drop.classList.remove('drag');
       const f = e.dataTransfer.files && e.dataTransfer.files[0];
-      if (f) readImage(f, onLoaded);
+      if (f) readImage(f, onLoaded, opts);
     });
   }
 
-  function readImage(file, cb) {
+  function readImage(file, cb, opts) {
     if (!/^image\//.test(file.type)) {
       toast('That is not an image.');
       return;
     }
-    if (file.size > 2 * 1024 * 1024) {
-      toast('Image is large (>2MB). It will still work, but slow to save.');
-    }
     const r = new FileReader();
-    r.onload = () => cb(r.result);
+    r.onload = () => {
+      const maxW = (opts && opts.maxW) || 1920;
+      const quality = (opts && opts.quality) || 0.85;
+      /* Resize + JPEG-compress anything bigger than 150KB so it fits
+       * comfortably in localStorage and the server config. Transparent
+       * PNGs (tiles) keep their format when small. */
+      if (file.size > 150 * 1024 || /^image\/heic|image\/heif/.test(file.type)) {
+        compressImage(r.result, maxW, quality).then((url) => {
+          cb(url);
+          if (url !== r.result) {
+            const kb = Math.round(url.length / 1400); /* rough base64 decode size */
+            toast(`Image compressed to ~${kb}KB`);
+          }
+        });
+      } else {
+        cb(r.result);
+      }
+    };
     r.onerror = () => toast('Failed to read file.');
     r.readAsDataURL(file);
+  }
+
+  function compressImage(dataUrl, maxW, quality) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxW / img.width);
+        const w = Math.max(1, Math.round(img.width  * scale));
+        const h = Math.max(1, Math.round(img.height * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const cx = canvas.getContext('2d');
+        cx.drawImage(img, 0, 0, w, h);
+        try {
+          const out = canvas.toDataURL('image/jpeg', quality);
+          resolve(out.length < dataUrl.length ? out : dataUrl);
+        } catch (e) {
+          resolve(dataUrl);
+        }
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
   }
 
   function renderImageInDrop(drop, dataUrl, onClear) {
@@ -408,6 +445,45 @@
       if (r.ok) serverState = await r.json();
     } catch (e) { serverState.enabled = false; }
     paintServerState();
+    paintGate();
+  }
+
+  /* ========================================================================
+     PASSWORD GATE -- shown when the server has ADMIN_TOKEN set and the
+     user has not yet supplied a valid token.
+     ======================================================================== */
+  function paintGate() {
+    const gate = $('admin-gate');
+    if (!gate) return;
+    const needsAuth = !!serverState.enabled && !serverState.authenticated;
+    if (needsAuth) {
+      gate.classList.remove('hidden');
+      gate.classList.add('active');
+    } else {
+      gate.classList.add('hidden');
+      gate.classList.remove('active');
+    }
+  }
+
+  async function trySubmitGate() {
+    const inp = $('gate-pw');
+    const err = $('gate-err');
+    const tok = (inp.value || '').trim();
+    err.textContent = '';
+    if (!tok) { err.textContent = 'Enter the admin token.'; return; }
+    /* Validate by hitting an admin-protected endpoint */
+    try {
+      const r = await fetch('/api/admin/config', {
+        cache: 'no-cache',
+        headers: { 'Authorization': 'Bearer ' + tok },
+      });
+      if (r.status === 401) { err.textContent = 'Wrong token.'; return; }
+      if (!r.ok && r.status !== 404) { err.textContent = 'Error: ' + r.status; return; }
+      sessionStorage.setItem('admin-token', tok);
+      probeServer(); /* this hides the gate when authenticated */
+    } catch (e) {
+      err.textContent = 'Network error reaching the server.';
+    }
   }
 
   function paintServerState() {
@@ -514,6 +590,14 @@
   });
   const reloadBtn = $('btn-preview-reload');
   if (reloadBtn) reloadBtn.onclick = reloadPreview;
+
+  /* Password gate wiring */
+  const gateSubmit = $('gate-submit');
+  if (gateSubmit) gateSubmit.onclick = trySubmitGate;
+  const gatePw = $('gate-pw');
+  if (gatePw) gatePw.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); trySubmitGate(); }
+  });
 
   /* Server-mode wiring */
   const tokenInput = $('admin-token');

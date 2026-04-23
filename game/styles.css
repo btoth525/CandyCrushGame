@@ -409,7 +409,9 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
+  padding: 4px;
+  min-height: 0; /* allow children to shrink in a flex column */
+  perspective: 1400px;
 }
 #shake-wrap {
   position: absolute;
@@ -466,20 +468,22 @@ html, body {
   justify-content: center;
   border-radius: 10px;
   font-size: min(7vw, 34px);
-  transition: transform 0.25s ease, opacity 0.2s;
+  transition: transform 0.2s ease, opacity 0.2s;
   box-shadow:
-    inset 0 -5px 0 rgba(0,0,0,0.35),
-    inset 0 2px 0 rgba(255,255,255,0.22),
-    0 2px 6px rgba(0,0,0,0.45),
-    0 0 10px rgba(244,197,66,0.18);
+    inset 0 -4px 0 rgba(0,0,0,0.32),
+    inset 0 2px 0 rgba(255,255,255,0.2),
+    0 2px 4px rgba(0,0,0,0.4);
+  /* Hardware acceleration: push each tile to its own compositor layer */
+  transform: translateZ(0);
   will-change: transform;
+  backface-visibility: hidden;
 }
 .tile::before {
   content: '';
   position: absolute;
   inset: 8%;
   border-radius: 6px;
-  background: radial-gradient(circle at 32% 28%, rgba(255,255,255,0.22) 0%, transparent 60%);
+  background: radial-gradient(circle at 32% 28%, rgba(255,255,255,0.2) 0%, transparent 60%);
   pointer-events: none;
 }
 .tile.swapping { transition: transform 0.18s ease; }
@@ -519,7 +523,6 @@ html, body {
   object-fit: contain;
   image-rendering: auto;
   pointer-events: none;
-  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));
 }
 .tile-svg {
   width: 88%;
@@ -528,31 +531,15 @@ html, body {
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.55));
 }
 .tile-svg svg {
   width: 100%;
   height: 100%;
-  overflow: visible;
+  display: block;
 }
-/* Subtle idle breathing animation */
-.tile-svg, .tile-img {
-  animation: tile-breathe 3.6s ease-in-out infinite;
-}
-@keyframes tile-breathe {
-  0%, 100% { transform: scale(1) rotate(0); }
-  50%      { transform: scale(1.04) rotate(0.8deg); }
-}
-/* Hover lift (desktop / pointer devices) */
-@media (hover: hover) {
-  .tile:hover { z-index: 3; }
-  .tile:hover .tile-svg,
-  .tile:hover .tile-img {
-    animation-play-state: paused;
-    transform: scale(1.08) translateZ(12px);
-    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.7)) brightness(1.15);
-    transition: transform 0.12s ease, filter 0.12s ease;
-  }
+/* Hover lift -- transform-only, GPU-accelerated, no filter repaint */
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover { z-index: 3; transform: translateZ(0) scale(1.06); transition: transform 0.12s ease; }
 }
 .tile.special-striped_h::after,
 .tile.special-striped_v::after {
@@ -670,20 +657,7 @@ html, body {
   100% { opacity: 0; }
 }
 
-.rune-ring {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 100%; height: 100%;
-  transform: translate(-50%, -50%);
-  border: 2px dashed rgba(244, 197, 66, 0.25);
-  border-radius: 16px;
-  pointer-events: none;
-  animation: rune-spin 40s linear infinite;
-}
-@keyframes rune-spin {
-  from { transform: translate(-50%, -50%) rotate(0); }
-  to   { transform: translate(-50%, -50%) rotate(360deg); }
-}
+/* rune-ring removed -- was misaligned and caused repaints around the board */
 .float-text {
   position: absolute;
   color: var(--gold-bright);

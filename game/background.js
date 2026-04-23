@@ -128,7 +128,7 @@ NUTS.Background = (function () {
 
     /* ==== Optional photo backdrop (user-supplied) ==== */
     if (bgImgLoaded && bgImg) {
-      bgImgFade = Math.min(1, bgImgFade + 0.01);
+      bgImgFade = Math.min(1, bgImgFade + 0.04);  /* fade in over ~0.4s */
       ctx.save();
       ctx.globalAlpha = bgImgFade;
       /* cover-fit */

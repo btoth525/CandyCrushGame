@@ -11,6 +11,56 @@
   padding-bottom: 60px;
 }
 
+/* ========= Password gate (shown when ADMIN_TOKEN is set) ========= */
+.admin-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 2, 14, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 20px;
+}
+.admin-gate.hidden { display: none; }
+.admin-gate.active ~ .admin-header,
+.admin-gate.active ~ .admin-tabs,
+.admin-gate.active ~ .admin-main { display: none; }
+.admin-gate-card {
+  background: linear-gradient(180deg, #2a1a4a, #150a28);
+  border: 3px solid var(--gold);
+  border-radius: 16px;
+  padding: 36px 32px;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 0 40px rgba(244,197,66,0.35);
+}
+.admin-gate-icon { font-size: 54px; margin-bottom: 8px; filter: drop-shadow(0 0 14px rgba(244,197,66,0.6)); }
+.admin-gate-card h2 { margin: 0 0 6px; color: var(--gold-bright); }
+.admin-gate-card p { margin: 8px 0 14px; }
+.admin-gate-card input {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 10px 0;
+  background: rgba(0,0,0,0.45);
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  color: var(--parchment);
+  font-family: inherit;
+  font-size: 15px;
+  text-align: center;
+  letter-spacing: 0.06em;
+}
+.admin-gate-card input:focus {
+  outline: none;
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 16px rgba(244,197,66,0.45);
+}
+.admin-gate-card .btn { width: 100%; margin-top: 6px; }
+.gate-err { color: #ff7aa5; min-height: 18px; margin: 8px 0 !important; font-size: 13px; }
+
 .admin-header {
   display: flex;
   justify-content: space-between;

@@ -101,12 +101,16 @@ NUTS.Game = function (level, opts) {
 
   function computeCellPx() {
     const wrap = boardEl.parentElement;
-    const w = Math.min(wrap.clientWidth, wrap.clientHeight, 520) - 16;
-    cellPx = Math.floor(w / COLS);
-    boardEl.style.width = (cellPx * COLS + 12) + 'px';
+    /* Use the smaller of available width/height, minus the board's own
+     * padding (12px total from 6px padding on each side). Cap at 720px
+     * on very large screens so the board doesn't grow absurdly big. */
+    const avail = Math.max(240, Math.min(wrap.clientWidth, wrap.clientHeight, 720));
+    const boardInner = avail - 12;
+    cellPx = Math.floor(boardInner / COLS);
+    boardEl.style.width  = (cellPx * COLS + 12) + 'px';
     boardEl.style.height = (cellPx * ROWS + 12) + 'px';
     boardEl.style.gridTemplateColumns = `repeat(${COLS}, ${cellPx}px)`;
-    boardEl.style.gridTemplateRows = `repeat(${ROWS}, ${cellPx}px)`;
+    boardEl.style.gridTemplateRows    = `repeat(${ROWS}, ${cellPx}px)`;
   }
 
   function renderInitial() {
@@ -691,10 +695,35 @@ NUTS.Game = function (level, opts) {
     return true;
   }
 
+  function attachBoardTilt() {
+    /* One transform on the board element, not 64 -- HW accelerated. */
+    const wrap = boardEl.parentElement;
+    if (!wrap || wrap._tiltAttached) return;
+    wrap._tiltAttached = true;
+    let tx = 0, ty = 0, raf = 0;
+    function paint() {
+      raf = 0;
+      boardEl.style.transform = `rotateX(${ty}deg) rotateY(${tx}deg)`;
+    }
+    wrap.addEventListener('pointermove', (e) => {
+      const r = wrap.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width  - 0.5;
+      const py = (e.clientY - r.top)  / r.height - 0.5;
+      tx =  px * 6;   /* yaw degrees */
+      ty = -py * 6;   /* pitch degrees */
+      if (!raf) raf = requestAnimationFrame(paint);
+    });
+    wrap.addEventListener('pointerleave', () => {
+      tx = 0; ty = 0;
+      if (!raf) raf = requestAnimationFrame(paint);
+    });
+  }
+
   function start() {
     buildBoard();
     computeCellPx();
     renderInitial();
+    attachBoardTilt();
     onEvent('moves', moves);
     onEvent('score', 0);
     onEvent('start', { level });

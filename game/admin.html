@@ -11,6 +11,18 @@
 </head>
 <body class="admin-body">
 
+<div id="admin-gate" class="admin-gate hidden">
+  <div class="admin-gate-card">
+    <div class="admin-gate-icon">🔐</div>
+    <h2>Admin Access</h2>
+    <p class="muted">This server requires the admin password to use the panel.</p>
+    <input id="gate-pw" type="password" placeholder="ADMIN_TOKEN" autocomplete="current-password" autofocus>
+    <button id="gate-submit" class="btn btn-primary">Unlock</button>
+    <p id="gate-err" class="gate-err"></p>
+    <p class="muted small">Set <code>ADMIN_TOKEN</code> on the container to define this. Leave the variable blank to disable this prompt entirely.</p>
+  </div>
+</div>
+
 <header class="admin-header">
   <div class="admin-brand">
     <span class="brand-bolt">⚡</span>

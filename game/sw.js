@@ -1,6 +1,6 @@
 /* Service worker: cache-first offline support.
  * Bump CACHE_VERSION whenever you ship changes that should invalidate the cache. */
-const CACHE_VERSION = 'cbwwn-v6';
+const CACHE_VERSION = 'cbwwn-v8';
 const CORE = [
   './',
   './index.html',
@@ -46,8 +46,11 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
-  /* Never cache the JSON API -- always go to network */
-  if (new URL(req.url).pathname.startsWith('/api/')) {
+  const path = new URL(req.url).pathname;
+  /* Never cache the JSON API or the live admin-published config -- if
+   * we cached config.json, the SW would keep serving the OLD admin
+   * config even after a fresh push. Always go to network for these. */
+  if (path.startsWith('/api/') || path === '/config.json') {
     return; /* let browser handle */
   }
   event.respondWith(
