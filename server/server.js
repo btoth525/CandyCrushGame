@@ -31,6 +31,8 @@ const PORT = parseInt(process.env.PORT || '3000', 10);
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
 const STATIC_DIR = process.env.STATIC_DIR || path.join(__dirname, '..', 'game');
 const DB_PATH = path.join(DATA_DIR, 'wizarding.db');
+const CONFIG_PATH = path.join(DATA_DIR, 'config.json');
+const ADMIN_TOKEN = (process.env.ADMIN_TOKEN || '').trim();
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
@@ -359,6 +361,69 @@ app.get('/api/daily', (req, res) => {
       goldenSeeds: golden,
     },
   });
+});
+
+/* ========== ADMIN: SERVER-SIDE CONFIG ========== */
+function adminAuth(req) {
+  if (!ADMIN_TOKEN) return false;
+  const h = req.headers.authorization || '';
+  const m = /^Bearer\s+(.+)$/.exec(h);
+  if (!m) return false;
+  return crypto.timingSafeEqual(
+    Buffer.from(m[1].padEnd(ADMIN_TOKEN.length, '\0').slice(0, ADMIN_TOKEN.length)),
+    Buffer.from(ADMIN_TOKEN)
+  );
+}
+
+app.get('/api/admin/status', (req, res) => {
+  res.json({
+    enabled: !!ADMIN_TOKEN,
+    authenticated: adminAuth(req),
+    hasConfig: fs.existsSync(CONFIG_PATH),
+  });
+});
+
+app.get('/api/admin/config', (req, res) => {
+  if (!adminAuth(req)) return res.status(401).json({ error: 'unauthorized' });
+  if (!fs.existsSync(CONFIG_PATH)) return res.json({ config: null });
+  try {
+    res.json({ config: JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8')) });
+  } catch (e) {
+    res.status(500).json({ error: 'config_corrupt' });
+  }
+});
+
+app.put('/api/admin/config', rateLimit(60), (req, res) => {
+  if (!adminAuth(req)) return res.status(401).json({ error: 'unauthorized' });
+  const cfg = req.body;
+  if (!cfg || typeof cfg !== 'object') return res.status(400).json({ error: 'invalid_config' });
+  const text = JSON.stringify(cfg, null, 2);
+  if (text.length > 8 * 1024 * 1024) return res.status(413).json({ error: 'config_too_large' });
+  fs.writeFileSync(CONFIG_PATH, text, 'utf8');
+  res.json({ ok: true, size: text.length });
+});
+
+app.delete('/api/admin/config', (req, res) => {
+  if (!adminAuth(req)) return res.status(401).json({ error: 'unauthorized' });
+  if (fs.existsSync(CONFIG_PATH)) fs.unlinkSync(CONFIG_PATH);
+  res.json({ ok: true });
+});
+
+/* Public read of the live config (used by config.js on every page load).
+ * Server-side admin push (above) wins over the static game/config.json. */
+app.get('/config.json', (req, res) => {
+  if (fs.existsSync(CONFIG_PATH)) {
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Content-Type', 'application/json');
+    return res.sendFile(CONFIG_PATH);
+  }
+  /* Fall back to bundled file if it exists */
+  const bundled = path.join(STATIC_DIR, 'config.json');
+  if (fs.existsSync(bundled)) {
+    res.setHeader('Cache-Control', 'no-cache');
+    return res.sendFile(bundled);
+  }
+  res.status(404).json({ error: 'not_found' });
 });
 
 /* ========== STATIC GAME ========== */

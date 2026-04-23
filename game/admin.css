@@ -54,6 +54,41 @@
   background: linear-gradient(180deg, #c43232 0%, #6b1212 100%);
   border-color: #ff8a8a;
 }
+.btn-server {
+  background: linear-gradient(180deg, #1f6b50 0%, #0a3325 100%);
+  border-color: #56e58b;
+}
+.server-status {
+  margin: 14px 0;
+  padding: 12px 16px;
+  background: rgba(0,0,0,0.35);
+  border-left: 3px solid #56e58b;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.server-status.error {
+  border-left-color: #ff7aa5;
+  color: #ffc1d4;
+}
+.server-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.server-help {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--parchment);
+  padding-left: 22px;
+}
+.server-help li { margin-bottom: 8px; }
+.server-help code {
+  background: rgba(0,0,0,0.4);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+}
 
 .admin-tabs {
   display: flex;

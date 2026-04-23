@@ -395,6 +395,106 @@
   }
 
   /* =========================================================
+     SERVER PUSH (when ADMIN_TOKEN is set on the container)
+     ========================================================= */
+  let serverState = { enabled: false, authenticated: false, hasConfig: false };
+
+  async function probeServer() {
+    try {
+      const r = await fetch('/api/admin/status', {
+        cache: 'no-cache',
+        headers: tokenHeader(),
+      });
+      if (r.ok) serverState = await r.json();
+    } catch (e) { serverState.enabled = false; }
+    paintServerState();
+  }
+
+  function paintServerState() {
+    const tabBtn = $('tab-btn-server');
+    const pushBtn = $('btn-push');
+    const stateEl = $('server-state');
+    const enabled = !!serverState.enabled;
+    if (tabBtn)  tabBtn.hidden  = !enabled;
+    if (pushBtn) pushBtn.hidden = !enabled;
+    if (!stateEl) return;
+    if (!enabled) {
+      stateEl.textContent = 'Admin push is disabled. Set ADMIN_TOKEN env var on the server container to enable.';
+      stateEl.parentElement.classList.add('error');
+      return;
+    }
+    stateEl.parentElement.classList.remove('error');
+    if (!serverState.authenticated) {
+      stateEl.textContent = serverState.hasConfig
+        ? 'Server has a published config. Enter your admin token to push or pull.'
+        : 'No server config published yet. Enter your admin token to push the first one.';
+    } else {
+      stateEl.innerHTML = serverState.hasConfig
+        ? '✅ Authenticated. A server config is currently live.'
+        : '✅ Authenticated. No server config yet — push your local one to publish.';
+    }
+  }
+
+  function tokenHeader() {
+    const t = sessionStorage.getItem('admin-token') || '';
+    return t ? { 'Authorization': 'Bearer ' + t } : {};
+  }
+
+  function setAdminToken(t) {
+    if (t) sessionStorage.setItem('admin-token', t);
+    else sessionStorage.removeItem('admin-token');
+    probeServer();
+  }
+
+  async function pushToServer() {
+    const t = sessionStorage.getItem('admin-token') || '';
+    if (!t) { toast('Enter the admin token first.'); return; }
+    try {
+      const r = await fetch('/api/admin/config', {
+        method: 'PUT',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, tokenHeader()),
+        body: JSON.stringify(cfg),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        toast(data.error === 'unauthorized' ? 'Wrong admin token.' : 'Push failed: ' + (data.error || r.status));
+        return;
+      }
+      toast(`Published! ${(data.size / 1024).toFixed(1)}KB live for everyone.`);
+      probeServer();
+    } catch (e) { toast('Network error pushing config.'); }
+  }
+
+  async function pullFromServer() {
+    try {
+      const r = await fetch('/api/admin/config', {
+        cache: 'no-cache',
+        headers: tokenHeader(),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) { toast('Pull failed: ' + (data.error || r.status)); return; }
+      if (!data.config) { toast('No server config to pull.'); return; }
+      cfg = data.config;
+      NUTS.Config.apply(cfg);
+      renderAll();
+      toast('Pulled. Click Save Locally to persist.');
+    } catch (e) { toast('Network error pulling config.'); }
+  }
+
+  async function clearServer() {
+    if (!confirm('Wipe the server-side published config? Visitors will fall back to bundled defaults.')) return;
+    try {
+      const r = await fetch('/api/admin/config', {
+        method: 'DELETE',
+        headers: tokenHeader(),
+      });
+      if (!r.ok) { toast('Clear failed.'); return; }
+      toast('Server config cleared.');
+      probeServer();
+    } catch (e) { toast('Network error clearing config.'); }
+  }
+
+  /* =========================================================
      WIRE EVERYTHING
      ========================================================= */
   function renderAll() {
@@ -414,6 +514,22 @@
   });
   const reloadBtn = $('btn-preview-reload');
   if (reloadBtn) reloadBtn.onclick = reloadPreview;
+
+  /* Server-mode wiring */
+  const tokenInput = $('admin-token');
+  if (tokenInput) {
+    tokenInput.value = sessionStorage.getItem('admin-token') || '';
+    tokenInput.addEventListener('input', () => setAdminToken(tokenInput.value.trim()));
+  }
+  const pushBtn = $('btn-push');
+  if (pushBtn) pushBtn.onclick = pushToServer;
+  const pushBtn2 = $('btn-push-server');
+  if (pushBtn2) pushBtn2.onclick = pushToServer;
+  const pullBtn = $('btn-pull-server');
+  if (pullBtn) pullBtn.onclick = pullFromServer;
+  const clearBtn = $('btn-clear-server');
+  if (clearBtn) clearBtn.onclick = clearServer;
+  probeServer();
 
   /* Cmd/Ctrl+S to save */
   window.addEventListener('keydown', (e) => {

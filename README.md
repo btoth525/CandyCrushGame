@@ -240,7 +240,20 @@ Open **`game/admin.html`** in your browser (or click the **⚙ Admin Panel** but
 
 **Save & Apply** writes everything to your browser's `localStorage`. **Export JSON** downloads a backup file (drop it back in via **Import JSON** anywhere). **Reset Defaults** wipes all customisations.
 
-> The admin runs entirely client-side — no server, no API. Your customisations live only in **your** browser's `localStorage`. To push them to everyone visiting your hosted game, save the exported JSON as `game/config.json` and commit it; on boot the game fetches that file and applies it as the base config (any user-side admin tweaks layer on top).
+### Pushing changes to everyone (server mode)
+
+If you're running the **server profile** and you've set the `ADMIN_TOKEN` environment variable on the container, the admin panel sprouts a **📡 Server** tab and a **📡 Push to Server** button.
+
+1. Generate a long random token: `openssl rand -hex 32`
+2. Set it as `ADMIN_TOKEN` on the Wizarding-Nuts container (Unraid → edit container → add a variable, or in `docker-compose.yml`)
+3. Restart the container
+4. Open the admin panel → **📡 Server** tab → paste the token → **Push Current Config to Server**
+
+The container saves your config to `/data/config.json` (lives on your Unraid appdata share). From then on, **every visitor's game fetches that file on boot** and uses it as the base — your tile renames, custom photos, level tweaks, the lot. Each visitor's own browser admin tweaks still layer on top of yours.
+
+You can also **Pull Server Config** to load the live one back into the editor, or **Clear Server Config** to revert everyone to bundled defaults.
+
+If you're not running server mode, the same admin still works — your changes just live in your browser only. Use **Export JSON** and commit the file to `game/config.json` in the repo if you want to ship it.
 
 ## Re-skinning the game
 

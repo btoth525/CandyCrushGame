@@ -20,7 +20,8 @@
     </div>
   </div>
   <div class="admin-actions">
-    <button id="btn-save"   class="btn btn-primary">💾 Save &amp; Apply</button>
+    <button id="btn-save"   class="btn btn-primary">💾 Save Locally</button>
+    <button id="btn-push"   class="btn btn-server" hidden>📡 Push to Server</button>
     <button id="btn-export" class="btn">📤 Export JSON</button>
     <label class="btn">📥 Import JSON
       <input id="file-import" type="file" accept="application/json,.json" hidden>
@@ -36,6 +37,7 @@
   <button class="tab"        data-tab="levels">📜 Levels</button>
   <button class="tab"        data-tab="audio">🔊 Audio</button>
   <button class="tab"        data-tab="preview">👁 Live Preview</button>
+  <button class="tab"        data-tab="server"  id="tab-btn-server" hidden>📡 Server</button>
 </nav>
 
 <main class="admin-main">
@@ -108,6 +110,36 @@
       <label>Music volume <span id="vol-music-label">0.35</span></label>
       <input id="audio-music-vol" type="range" min="0" max="1" step="0.05" value="0.35">
     </div>
+  </section>
+
+  <!-- ===== Server (only when ADMIN_TOKEN is set) ===== -->
+  <section id="tab-server" class="tab-panel">
+    <div class="panel-help">
+      <p>This server has admin push enabled. Enter your <code>ADMIN_TOKEN</code> (set on the container via the <code>ADMIN_TOKEN</code> environment variable) to push your local config so every visitor sees it.</p>
+    </div>
+
+    <div class="form-row">
+      <label>Admin token</label>
+      <input id="admin-token" type="password" placeholder="paste ADMIN_TOKEN here" autocomplete="off">
+      <p class="muted small">Stored only in this browser's session. Cleared on tab close.</p>
+    </div>
+
+    <div class="server-status">
+      <div id="server-state" class="muted">Probing…</div>
+    </div>
+
+    <div class="server-actions">
+      <button id="btn-push-server"  class="btn btn-primary">📡 Push Current Config to Server</button>
+      <button id="btn-pull-server"  class="btn">⬇ Pull Server Config</button>
+      <button id="btn-clear-server" class="btn btn-danger">🗑 Clear Server Config</button>
+    </div>
+
+    <h3 class="section-h">What this does</h3>
+    <ul class="server-help">
+      <li><strong>Push</strong> sends your current local config (everything from the other tabs) to the server. The server saves it as <code>/data/config.json</code>. From then on, every visitor's game fetches that file on boot and uses it as the base. Their per-browser tweaks still layer on top.</li>
+      <li><strong>Pull</strong> replaces your local config with whatever's currently live on the server. Useful if you want to edit what's published.</li>
+      <li><strong>Clear</strong> removes the server config; visitors fall back to bundled defaults.</li>
+    </ul>
   </section>
 
   <!-- ===== Live Preview ===== -->
