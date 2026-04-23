@@ -1,0 +1,23 @@
+{
+  "name": "wizarding-nuts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Charles & Brandon's Wizarding World of Nuts -- match-3 web game wrapped for Android/iOS via Capacitor.",
+  "scripts": {
+    "serve": "python3 -m http.server 8000 --directory game",
+    "cap:init": "npx cap add android && npx cap sync",
+    "cap:add-ios": "npx cap add ios && npx cap sync",
+    "cap:sync": "npx cap sync",
+    "cap:open-android": "npx cap open android",
+    "cap:open-ios": "npx cap open ios",
+    "build:apk": "bash scripts/build-android.sh"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2"
+  }
+}

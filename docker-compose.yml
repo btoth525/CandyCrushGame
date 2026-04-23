@@ -1,0 +1,21 @@
+services:
+  wizarding-nuts:
+    container_name: wizarding-nuts
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Or pull a prebuilt image you push to a registry:
+    # image: yourname/wizarding-nuts:latest
+    ports:
+      - "8080:80"        # change the LEFT port to whatever you want on Unraid
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+# To run:
+#   docker compose up -d --build
+# Then visit:
+#   http://<unraid-ip>:8080

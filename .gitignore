@@ -1,0 +1,21 @@
+# Node / Capacitor
+node_modules/
+package-lock.json
+
+# Capacitor-generated platforms (regenerated locally with `npx cap add ...`)
+android/
+ios/
+
+# Build artifacts
+*.apk
+*.aab
+*.ipa
+dist/
+build/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

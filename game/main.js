@@ -162,6 +162,13 @@ NUTS.Main = (function () {
     applySettings();
     wireEvents();
     openTitle();
+    registerSW();
+  }
+
+  function registerSW() {
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
   }
 
   document.addEventListener('DOMContentLoaded', init);

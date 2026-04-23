@@ -1,0 +1,17 @@
+{
+  "appId": "com.charlesbrandon.wizardingnuts",
+  "appName": "Wizarding Nuts",
+  "webDir": "game",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#1a0d2e"
+  },
+  "ios": {
+    "contentInset": "always",
+    "backgroundColor": "#1a0d2e"
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
