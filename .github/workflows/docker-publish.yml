@@ -62,6 +62,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ steps.imgname.outputs.name }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/claude/match-3-game-SHJ92' }}
             type=ref,event=branch
             type=ref,event=tag
             type=semver,pattern={{version}}
