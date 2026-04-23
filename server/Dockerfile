@@ -35,11 +35,11 @@ VOLUME ["/data"]
 
 WORKDIR /app/server
 
-# Drop to non-root user for principle of least privilege
-RUN addgroup -S app && adduser -S app -G app \
- && mkdir -p /data \
- && chown -R app:app /data
-USER app
+# Run as root inside the container so the bind-mounted /data volume
+# (owned by nobody:users on Unraid, root on most other hosts) is
+# always writable. The container is isolated; running as root inside
+# does not grant root on the host.
+RUN mkdir -p /data
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD wget -q --spider http://localhost:3000/api/ping || exit 1
