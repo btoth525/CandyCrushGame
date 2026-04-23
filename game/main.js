@@ -6,7 +6,7 @@ NUTS.Main = (function () {
   const ui = NUTS.UI;
   const audio = NUTS.audio;
 
-  let progress = { stars: {}, best: {} };
+  let progress = { stars: {}, best: {}, ranks: {}, streak: { last: '', current: 0, best: 0 } };
   let settings = { sfxOn: true, musicOn: true, sfxVol: 0.7, musicVol: 0.35 };
   let game = null;
   let currentLevel = null;
@@ -16,7 +16,14 @@ NUTS.Main = (function () {
       const raw = localStorage.getItem(SAVE_KEY);
       if (!raw) return;
       const o = JSON.parse(raw);
-      if (o.progress) progress = o.progress;
+      if (o.progress) {
+        progress = Object.assign(
+          { stars: {}, best: {}, ranks: {}, streak: { last: '', current: 0, best: 0 } },
+          o.progress
+        );
+        if (!progress.streak) progress.streak = { last: '', current: 0, best: 0 };
+        if (!progress.ranks) progress.ranks = {};
+      }
       if (o.settings) settings = o.settings;
     } catch (e) {}
   }
@@ -86,20 +93,45 @@ NUTS.Main = (function () {
     const lv = currentLevel;
     const score = payload.score;
     const stars = won ? computeStars(lv, score) : 0;
+    let isNewBest = false;
+    let rankInfo = null;
     if (won) {
       const prev = progress.stars[lv.id] || 0;
       if (stars > prev) progress.stars[lv.id] = stars;
       const prevBest = progress.best[lv.id] || 0;
-      if (score > prevBest) progress.best[lv.id] = score;
+      if (score > prevBest) {
+        isNewBest = true;
+        progress.best[lv.id] = score;
+      }
+      updateStreak();
       save();
       pushCloudSave();
-      submitScoreToServer(lv, score, stars);
+      submitScoreToServer(lv, score, stars).then((res) => {
+        if (res && res.rank != null) {
+          rankInfo = { rank: res.rank, prev: progress.ranks[lv.id] || null };
+          if (rankInfo.prev == null || res.rank < rankInfo.prev) {
+            progress.ranks[lv.id] = res.rank;
+            save();
+          }
+        }
+      });
+      /* Achievements */
+      NUTS.Achievements.unlock('first_win');
+      if (stars === 3) NUTS.Achievements.unlock('three_star');
+      if (lv.id === 999) NUTS.Achievements.unlock('daily_first');
+      const allThree = NUTS.levels.every((l) => (progress.stars[l.id] || 0) >= 3);
+      if (allThree) NUTS.Achievements.unlock('all_three_star');
+      /* Confetti */
+      confetti(stars);
       setTimeout(() => audio.sfx.star(), 400);
       setTimeout(() => audio.sfx.star(), 600);
       setTimeout(() => audio.sfx.star(), 800);
     }
     const next = NUTS.levels.find((l) => l.id === lv.id + 1);
     setTimeout(() => {
+      const newBestHtml = isNewBest && won ? `<div class="new-best">⚡ New Best!</div>` : '';
+      const rankHtml = (rankInfo && rankInfo.rank && rankInfo.rank <= 50)
+        ? `<div class="rank-up">🏆 Global rank #${rankInfo.rank}</div>` : '';
       ui.showModal(
         `<h2>${won ? 'Victory!' : 'Hex Hath Fallen'}</h2>
          <p>${won ? `${lv.name} cleared with ${score.toLocaleString()} points` : `Out of moves on ${lv.name}`}</p>
@@ -107,7 +139,9 @@ NUTS.Main = (function () {
             <span class="${stars>=1?'star-on':'star-off'}">★</span>
             <span class="${stars>=2?'star-on':'star-off'}">★</span>
             <span class="${stars>=3?'star-on':'star-off'}">★</span>
-         </div>` : ''}`,
+         </div>` : ''}
+         ${newBestHtml}
+         ${rankHtml}`,
         [
           { label: 'Map', onClick: () => { ui.hideModal(); openMap(); } },
           { label: 'Retry', onClick: () => { ui.hideModal(); startLevel(lv); } },
@@ -115,6 +149,60 @@ NUTS.Main = (function () {
         ]
       );
     }, 700);
+  }
+
+  function updateStreak() {
+    const today = new Date().toISOString().slice(0, 10);
+    const last = progress.streak.last;
+    if (last === today) return;
+    if (last) {
+      const lastD = new Date(last + 'T00:00:00Z').getTime();
+      const todayD = new Date(today + 'T00:00:00Z').getTime();
+      const days = Math.round((todayD - lastD) / 86400000);
+      if (days === 1) progress.streak.current++;
+      else            progress.streak.current = 1;
+    } else {
+      progress.streak.current = 1;
+    }
+    progress.streak.last = today;
+    if (progress.streak.current > progress.streak.best) progress.streak.best = progress.streak.current;
+    if (progress.streak.current >= 3) NUTS.Achievements.unlock('streak_3');
+    if (progress.streak.current >= 7) NUTS.Achievements.unlock('streak_7');
+    paintStreakBadge();
+  }
+
+  function paintStreakBadge() {
+    const el = document.getElementById('streak-badge');
+    if (!el) return;
+    const n = (progress.streak && progress.streak.current) || 0;
+    if (n < 1) { el.classList.add('hidden'); return; }
+    el.classList.remove('hidden');
+    const cnt = document.getElementById('streak-count');
+    if (cnt) cnt.textContent = n;
+  }
+
+  /* Confetti burst on win. Color and density scale with stars earned. */
+  function confetti(stars) {
+    const colors = stars >= 3
+      ? ['#ffd764', '#fff6d0', '#f4c542', '#ff7aa5', '#c99bff']
+      : stars === 2
+      ? ['#c0c0e0', '#ffffff', '#a0a0c0', '#ffd764']
+      : ['#c87a2b', '#a37e1a', '#ffd764'];
+    const count = 30 + stars * 30;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.left = (45 + Math.random() * 10) + '%';
+      p.style.top = '40%';
+      p.style.background = colors[i % colors.length];
+      p.style.setProperty('--cx', ((Math.random() - 0.5) * 800) + 'px');
+      p.style.setProperty('--cr', (Math.random() * 1080 - 540) + 'deg');
+      p.style.animationDelay = (Math.random() * 0.3) + 's';
+      p.style.animationDuration = (1.8 + Math.random() * 1.2) + 's';
+      if (Math.random() < 0.5) p.style.borderRadius = '50%';
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 3500);
+    }
   }
 
   function computeStars(lv, score) {
@@ -172,6 +260,13 @@ NUTS.Main = (function () {
     if (dailyBtn) dailyBtn.onclick = () => { audio.sfx.click(); playDaily(); };
     const acctBtn = document.getElementById('btn-account');
     if (acctBtn) acctBtn.onclick = () => { audio.sfx.click(); accountModal(); };
+    const achBtn = document.getElementById('btn-achievements');
+    if (achBtn) achBtn.onclick = () => {
+      audio.sfx.click();
+      ui.showModal(NUTS.Achievements.renderModal(), [
+        { label: 'Close', primary: true, onClick: () => ui.hideModal() },
+      ]);
+    };
     const lbBack = document.getElementById('btn-lb-back');
     if (lbBack) lbBack.onclick = () => { audio.sfx.click(); openTitle(); };
     const lbScope  = document.getElementById('lb-scope');
@@ -188,25 +283,44 @@ NUTS.Main = (function () {
   }
 
   function submitScoreToServer(lv, score, stars) {
-    if (!NUTS.Api || !NUTS.Api.isOnline()) return;
+    if (!NUTS.Api || !NUTS.Api.isOnline()) return Promise.resolve(null);
     if (!NUTS.Api.user()) {
       /* Prompt for a name on the first WIN if user is anonymous */
-      promptWizardName('You won! Pick a wizard name to save your score on the leaderboard.')
-        .then((u) => { if (u) NUTS.Api.submitScore(lv.id, score, stars, lv.moves - game.getMoves()); });
-      return;
+      return promptWizardName('You won! Pick a wizard name to save your score on the leaderboard.')
+        .then((u) => u ? NUTS.Api.submitScore(lv.id, score, stars, lv.moves - game.getMoves()) : null);
     }
-    NUTS.Api.submitScore(lv.id, score, stars, lv.moves - game.getMoves());
+    return NUTS.Api.submitScore(lv.id, score, stars, lv.moves - game.getMoves())
+      .then((res) => {
+        if (res && res.rank && res.rank <= 10) NUTS.Achievements.unlock('top_10');
+        return res;
+      });
+  }
+
+  /* Random wizard-name generator: fantasy-feel, two-part, no real-world IP */
+  const WN_ADJ = ['Stardust','Crimson','Whispering','Mystic','Arcane','Lunar','Solar','Frostbite','Ember','Twilight','Silvermoon','Hollow','Verdant','Astral','Obsidian','Gilded','Storm','Velvet'];
+  const WN_NOUN = ['Owl','Falcon','Wand','Star','Phoenix','Crow','Wolf','Specter','Sage','Mage','Raven','Drake','Lynx','Hare','Stag','Fox','Toad','Nightingale'];
+  function suggestNames(n) {
+    const out = new Set();
+    while (out.size < n) {
+      out.add(WN_ADJ[Math.floor(Math.random() * WN_ADJ.length)] + ' ' +
+              WN_NOUN[Math.floor(Math.random() * WN_NOUN.length)]);
+    }
+    return Array.from(out);
   }
 
   function promptWizardName(reason) {
     return new Promise((resolve) => {
+      const sugg = suggestNames(4);
       ui.showModal(`
         <h2>Choose Your Wizard Name</h2>
         <p>${reason || 'Pick a name to compete on the global leaderboards. 2-20 letters/numbers/spaces.'}</p>
-        <input id="wn-input" type="text" maxlength="20" placeholder="e.g. Stardust the Bold"
+        <input id="wn-input" type="text" maxlength="20" placeholder="e.g. Stardust Owl"
                style="width:100%;padding:10px;margin-top:10px;background:rgba(0,0,0,0.4);
                       border:2px solid var(--gold);border-radius:8px;color:var(--parchment);
                       font-family:inherit;font-size:16px;text-align:center;">
+        <div class="name-suggestions">
+          ${sugg.map((s) => `<button type="button" class="name-chip" data-name="${s.replace(/"/g,'&quot;')}">${s}</button>`).join('')}
+        </div>
         <p id="wn-err" class="muted" style="margin-top:8px;color:#ff7aa5;min-height:18px;"></p>
       `, [
         { label: 'Skip', onClick: () => { ui.hideModal(); resolve(null); } },
@@ -233,6 +347,13 @@ NUTS.Main = (function () {
       setTimeout(() => {
         const inp = document.getElementById('wn-input');
         if (inp) inp.focus();
+        document.querySelectorAll('.name-chip').forEach((c) => {
+          c.onclick = () => {
+            const v = c.getAttribute('data-name') || '';
+            const i = document.getElementById('wn-input');
+            if (i) { i.value = v; i.focus(); }
+          };
+        });
       }, 50);
     });
   }
@@ -346,6 +467,7 @@ NUTS.Main = (function () {
     const bgCanvas = document.getElementById('bg-canvas');
     if (bgCanvas && NUTS.Background) NUTS.Background.init(bgCanvas);
     refreshOnlineStatus();
+    paintStreakBadge();
     /* Pull cloud save if logged in */
     if (NUTS.Api && NUTS.Api.isOnline() && NUTS.Api.user()) {
       NUTS.Api.loadCloudSave().then((cloud) => {

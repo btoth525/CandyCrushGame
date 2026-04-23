@@ -71,6 +71,13 @@ db.exec(`
     payload     TEXT NOT NULL,
     updated_at  INTEGER NOT NULL
   );
+  CREATE TABLE IF NOT EXISTS achievements (
+    user_id      INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    code         TEXT NOT NULL,
+    unlocked_at  INTEGER NOT NULL,
+    PRIMARY KEY (user_id, code)
+  );
+  CREATE INDEX IF NOT EXISTS idx_achievements_code ON achievements(code);
 `);
 
 /* ========================================================================
@@ -323,6 +330,30 @@ app.put('/api/save', rateLimit(120), (req, res) => {
   res.json({ ok: true, updatedAt: t });
 });
 
+/* ========== ACHIEVEMENTS ========== */
+const ACH_CODE_RE = /^[a-z0-9_]{2,40}$/;
+
+app.get('/api/achievements', (req, res) => {
+  const u = authUser(req);
+  if (!u) return res.status(401).json({ error: 'unauthorized' });
+  const rows = db.prepare(`
+    SELECT code, unlocked_at FROM achievements WHERE user_id = ? ORDER BY unlocked_at DESC
+  `).all(u.id);
+  res.json({ achievements: rows });
+});
+
+app.post('/api/achievements', rateLimit(120), (req, res) => {
+  const u = authUser(req);
+  if (!u) return res.status(401).json({ error: 'unauthorized' });
+  const code = (req.body && req.body.code || '').trim();
+  if (!ACH_CODE_RE.test(code)) return res.status(400).json({ error: 'invalid_code' });
+  const t = now();
+  const info = db.prepare(`
+    INSERT OR IGNORE INTO achievements (user_id, code, unlocked_at) VALUES (?, ?, ?)
+  `).run(u.id, code, t);
+  res.json({ ok: true, newlyUnlocked: info.changes > 0, unlockedAt: t });
+});
+
 /* ========== DAILY CHALLENGE ========== */
 function dailySeed() {
   const d = new Date();
@@ -364,16 +395,47 @@ app.get('/api/daily', (req, res) => {
 });
 
 /* ========== ADMIN: SERVER-SIDE CONFIG ========== */
+function constantTimeMatch(supplied) {
+  if (!ADMIN_TOKEN || !supplied) return false;
+  const a = Buffer.from(supplied);
+  const b = Buffer.from(ADMIN_TOKEN);
+  if (a.length !== b.length) return false;
+  return crypto.timingSafeEqual(a, b);
+}
+
 function adminAuth(req) {
   if (!ADMIN_TOKEN) return false;
   const h = req.headers.authorization || '';
-  const m = /^Bearer\s+(.+)$/.exec(h);
-  if (!m) return false;
-  return crypto.timingSafeEqual(
-    Buffer.from(m[1].padEnd(ADMIN_TOKEN.length, '\0').slice(0, ADMIN_TOKEN.length)),
-    Buffer.from(ADMIN_TOKEN)
-  );
+  const bearer = /^Bearer\s+(.+)$/.exec(h);
+  if (bearer) return constantTimeMatch(bearer[1]);
+  /* Also accept Basic Auth (browser-friendly for /admin.html) */
+  const basic = /^Basic\s+(.+)$/.exec(h);
+  if (basic) {
+    try {
+      const [, pass = ''] = Buffer.from(basic[1], 'base64').toString().split(':');
+      return constantTimeMatch(pass);
+    } catch (e) { return false; }
+  }
+  return false;
 }
+
+/* Admin-page lockdown: when ADMIN_TOKEN is set, the admin UI files
+ * (admin.html, admin.css, admin.js) require Basic Auth before being
+ * served. Without an admin token configured, access is open (the
+ * dangerous server endpoints remain locked regardless). */
+function requireAdminPage(req, res, next) {
+  if (!ADMIN_TOKEN) return next();
+  if (adminAuth(req)) return next();
+  res.set('WWW-Authenticate', 'Basic realm="Wizarding Nuts Admin", charset="UTF-8"');
+  res.status(401).send('Authentication required to access the admin panel.');
+}
+
+app.use((req, res, next) => {
+  if (/^\/admin(\.html|\.css|\.js)?$/.test(req.path)) {
+    return requireAdminPage(req, res, next);
+  }
+  next();
+});
 
 app.get('/api/admin/status', (req, res) => {
   res.json({

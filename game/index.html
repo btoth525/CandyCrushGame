@@ -34,8 +34,14 @@
           <button id="btn-leaderboard" class="btn server-only" hidden>🏆 Leaderboards</button>
           <button id="btn-settings" class="btn">Settings</button>
           <button id="btn-account" class="btn btn-small server-only" hidden>👤 Wizard Profile</button>
+          <button id="btn-achievements" class="btn btn-small">🏅 Achievements</button>
           <a href="admin.html" class="btn btn-small">⚙ Admin Panel</a>
           <button id="btn-reset" class="btn btn-small">Reset Progress</button>
+        </div>
+        <div id="streak-badge" class="streak-badge hidden">
+          <span class="streak-flame">🔥</span>
+          <span class="streak-count" id="streak-count">0</span>
+          <span class="streak-label">day streak</span>
         </div>
         <div id="online-status" class="online-status hidden"></div>
         <p class="credits">Brewed by Charles &amp; Brandon in the Great Nuttery</p>
@@ -107,6 +113,7 @@
   <script src="levels.js"></script>
   <script src="config.js"></script>
   <script src="api.js"></script>
+  <script src="achievements.js"></script>
   <script src="audio.js"></script>
   <script src="background.js"></script>
   <script src="game.js"></script>

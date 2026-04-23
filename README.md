@@ -260,6 +260,17 @@ Open **`game/admin.html`** in your browser (or click the **⚙ Admin Panel** but
 
 **Save & Apply** writes everything to your browser's `localStorage`. **Export JSON** downloads a backup file (drop it back in via **Import JSON** anywhere). **Reset Defaults** wipes all customisations.
 
+### Admin lockdown
+
+When `ADMIN_TOKEN` is set on the server, the entire admin UI (`/admin.html`, `/admin.css`, `/admin.js`) is gated by HTTP Basic Auth. Visit `/admin.html`, the browser pops a username/password prompt:
+
+- **Username**: anything (use `admin`)
+- **Password**: your `ADMIN_TOKEN`
+
+Browser caches it for the session. Close all tabs to log out. The same token also unlocks the Push/Pull/Clear buttons inside the admin (sent as Bearer in headers).
+
+If `ADMIN_TOKEN` is unset, the admin UI is open (anyone can edit their own browser's localStorage — harmless — but server push remains disabled entirely).
+
 ### Pushing changes to everyone (server mode)
 
 If you're running the **server profile** and you've set the `ADMIN_TOKEN` environment variable on the container, the admin panel sprouts a **📡 Server** tab and a **📡 Push to Server** button.

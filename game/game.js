@@ -335,6 +335,10 @@ NUTS.Game = function (level, opts) {
 
   async function processMatches(matches, ctx) {
     audio.sfx.match(chain);
+    if (NUTS.Achievements) {
+      NUTS.Achievements.unlock('first_match');
+      if (chain >= 5) NUTS.Achievements.unlock('combo_5');
+    }
     const toClear = new Set();
     const specialsToCreate = [];
     const cleared = []; /* {r,c, type} */
@@ -403,6 +407,11 @@ NUTS.Game = function (level, opts) {
       }
       audio.sfx.specialCreate();
       spawnFloatText(s.r, s.c, s.type === 'colorbomb' ? 'PATRONUS!' : 'BOMBARDA!');
+      /* Achievements */
+      if (NUTS.Achievements) {
+        if (s.type === 'colorbomb') NUTS.Achievements.unlock('patronus');
+        else NUTS.Achievements.unlock('bombarda');
+      }
     });
     /* Reduce jinx layers */
     jinxHit.forEach((k) => {
