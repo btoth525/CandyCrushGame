@@ -27,17 +27,18 @@ cd game && python3 -m http.server 8000
 
 ## Features
 
-- **20 hand-crafted levels** along The Enchanted Nut Path, each with star ratings (1–3 ⭐)
-- **Four objective types**: score targets, collect-N-of-tile, clear jinxed tiles, drop golden acorns to the bottom row
+- **6 hand-drawn SVG tile types**: Wizard Hat, Magic Wand, Glowing Potion, Golden Snitch, Ancient Spellbook, Crystal Ball — crisp at any resolution
+- **Animated castle scene**: Hogwarts-style silhouette with towers, bridge, waterfall, clock tower with moving hands, flickering windows, floating candles, aurora shimmer, shooting stars and lightning
+- **20 hand-crafted levels** along The Enchanted Nut Path, each with star ratings (1–3 ⭐). Level 1 is a gentle tutorial (35 moves, 1,500 pts)
+- **Four objective types**: score, collect-N-of-tile, clear jinxed tiles, drop golden snitches to the bottom row
 - **Match-3 engine** with cascading drops, chain combos, and screen shake on big chains
 - **Special tiles**: Bombarda (match 4 → row/column clear), Patronus (match 5 → clear all of one colour), Patronus + Patronus → whole-board clear
-- **Obstacles**: jinxed tiles (purple-hexed; weakened by adjacent matches), golden acorns (drop to bottom)
-- **Polish**: particle bursts, floating score popups, animated combo banner, star-reveal on win
-- **Settings**: SFX on/off, music on/off, independent volume sliders
-- **Synthesised audio** — every sound and the background music are generated live with Web Audio (no asset files to ship)
-- **localStorage save** — stars, best scores, and settings persist
-- **Responsive** — desktop + mobile layouts; pointer + touch input
-- **PWA**: installable to iOS / Android home screens, works offline after first load
+- **Obstacles**: jinxed tiles (purple-hexed; weakened by adjacent matches), golden snitches (drop to bottom)
+- **3D board**: CSS perspective with lift-on-hover and idle "breathing" animation
+- **Cinematic title**: staggered letter fade-in with animated specular sweep
+- **FX**: 14-particle bursts per match, coloured shockwave rings on every special, full-screen lightning on 4+ combos and Patronus activations, rotating rune ring around the board
+- **Cinematic music**: four-voice looping score in A minor — sweeping saw pad, triangle arpeggios, lead + sub bass + synth drums. All pure Web Audio, no files
+- **localStorage save**, **responsive mobile+desktop**, **offline PWA**, installable to iOS and Android home screens
 
 ---
 
@@ -183,18 +184,31 @@ Open `game/textures.js`. Each tile is a single object:
 
 ```js
 {
-  id: 'acorn',
-  label: 'Enchanted Acorn',
-  glyph: '🌰',                  // fallback if image is missing
-  image: 'assets/acorn.png',    // preferred when present
-  color: '#8b5a2b',             // background tint
-  bg:    '#3a2416',             // contrast rim
+  id: 'wizardhat',
+  label: 'Wizard Hat',
+  glyph: '🎩',                      // emoji fallback
+  image: 'assets/wizardhat.png',    // highest priority (your own PNG)
+  svgArt: 'wizardhat',              // key in tile-art.js (hand-drawn SVG)
+  color: '#3a1570',                 // background tint
+  bg:    '#1a0b38',                 // contrast rim
 }
 ```
 
-To re-skin: drop a square transparent PNG (128×128 or larger) into `game/assets/`, set its path on `image`, reload. The engine prefers `image` and silently falls back to `glyph` if the file fails to load.
+**Priority**: `image` > `svgArt` > `glyph`. The default ships with detailed hand-drawn SVG, so tiles look great out of the box. Drop a square transparent PNG (128×128 or larger) into `game/assets/` to override any tile with your own art.
 
-`NUTS.branding` at the bottom of the same file controls the title, tagline, and chapter prefix shown in-game.
+### Use your own castle photo as the backdrop
+
+The game ships with a fully animated hand-drawn castle scene. If you have a licensed photo you prefer (your own photography, a [Creative Commons image of Alnwick Castle, Neuschwanstein, or Edinburgh Castle](https://commons.wikimedia.org/wiki/Category:Castles) from Wikimedia Commons, or a free CC0 Unsplash / Pexels photo), you can use it as the backdrop:
+
+1. Put the file in `game/assets/` (e.g. `my-castle.jpg`)
+2. Open `game/textures.js` and set `backgroundImage: "assets/my-castle.jpg"` in the `NUTS.branding` block
+3. Reload
+
+The photo becomes the sky backdrop while the animated canvas effects — moon, aurora, lightning, particles, fog, floating candles, shooting stars — continue to overlay on top for cinematic atmosphere. Adjust `backgroundOverlayOpacity` (0–1) in the same block if the overlay is too dark or too light.
+
+> **Important:** only use images you have the right to use. Hogwarts castle renders from the films and the *Hogwarts Legacy* game are copyright of Warner Bros. / Portkey Games and cannot be redistributed. Real-world castles (Alnwick, Eilean Donan, Neuschwanstein, etc.) have loads of free CC0 / CC-BY photography on Wikimedia Commons and Unsplash — any of those will give you the Hogwarts vibe legitimately.
+
+`NUTS.branding` at the bottom of `textures.js` also controls the title, tagline, and chapter prefix shown in-game.
 
 ## Adding levels
 

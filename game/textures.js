@@ -2,71 +2,74 @@
  * This is the ONE file you edit to re-skin the game.
  *
  * For each tile:
- *   - glyph: the emoji/text used if no image is provided
- *   - image: path to a PNG/SVG in ./assets/ (preferred over glyph when set)
- *   - color: the tile's background tint
- *   - bg:    a darker rim color for contrast
+ *   - id, label: identity
+ *   - glyph: emoji fallback used if neither `image` nor `svgArt` is set
+ *   - image: path to a PNG/SVG file in ./assets/ (highest priority)
+ *   - svgArt: key into NUTS.tileArt -- inline SVG (default path used here)
+ *   - color/bg: background tint
  *
- * Tile images should be square, transparent-background PNGs, ideally 128x128
- * or larger. The engine scales them to fit automatically.
- *
- * To add more tile types just append more entries (minimum 5).
+ * Priority: image > svgArt > glyph.
  */
 
 window.NUTS = window.NUTS || {};
 
 NUTS.tileTypes = [
   {
-    id: 'acorn',
-    label: 'Enchanted Acorn',
-    glyph: '🌰',
-    image: 'assets/acorn.png',
-    color: '#8b5a2b',
-    bg: '#3a2416',
+    id: 'wizardhat',
+    label: 'Wizard Hat',
+    glyph: '🎩',
+    image: 'assets/wizardhat.png',
+    svgArt: 'wizardhat',
+    color: '#3a1570',
+    bg: '#1a0b38',
   },
   {
-    id: 'walnut',
-    label: 'Bewitched Walnut',
-    glyph: '🥜',
-    image: 'assets/walnut.png',
-    color: '#c08552',
-    bg: '#402a15',
+    id: 'wand',
+    label: 'Magic Wand',
+    glyph: '🪄',
+    image: 'assets/wand.png',
+    svgArt: 'wand',
+    color: '#5a3a14',
+    bg: '#2a1a08',
   },
   {
-    id: 'chestnut',
-    label: "Merlin's Chestnut",
-    glyph: '🟤',
-    image: 'assets/chestnut.png',
-    color: '#6b3410',
-    bg: '#2b1a0c',
+    id: 'potion',
+    label: 'Glowing Potion',
+    glyph: '🧪',
+    image: 'assets/potion.png',
+    svgArt: 'potion',
+    color: '#0a4836',
+    bg: '#051a10',
   },
   {
-    id: 'hazelnut',
-    label: "Hermione's Hazelnut",
-    glyph: '🟠',
-    image: 'assets/hazelnut.png',
-    color: '#d97706',
-    bg: '#4a2a0a',
+    id: 'snitch',
+    label: 'Golden Snitch',
+    glyph: '✨',
+    image: 'assets/snitch.png',
+    svgArt: 'snitch',
+    color: '#8b6410',
+    bg: '#3d2810',
   },
   {
-    id: 'pecan',
-    label: 'Patronus Pecan',
-    glyph: '🟡',
-    image: 'assets/pecan.png',
-    color: '#eab308',
-    bg: '#4a3a0a',
+    id: 'spellbook',
+    label: 'Ancient Spellbook',
+    glyph: '📖',
+    image: 'assets/spellbook.png',
+    svgArt: 'spellbook',
+    color: '#6b1230',
+    bg: '#1a0508',
   },
   {
-    id: 'almond',
-    label: 'Alchemist Almond',
-    glyph: '⚪',
-    image: 'assets/almond.png',
-    color: '#e0d4b8',
-    bg: '#3a3428',
+    id: 'crystalball',
+    label: 'Crystal Ball',
+    glyph: '🔮',
+    image: 'assets/crystalball.png',
+    svgArt: 'crystalball',
+    color: '#4b1a80',
+    bg: '#1a0838',
   },
 ];
 
-/* Special tile overlays -- normally you don't need to edit these */
 NUTS.specials = {
   striped_h: { glyph: '', label: 'Bombarda (row)' },
   striped_v: { glyph: '', label: 'Bombarda (column)' },
@@ -78,4 +81,13 @@ NUTS.branding = {
   title: "Charles & Brandon's Wizarding World of Nuts",
   tagline: "A Match-3 Spellbound Adventure",
   levelNamePrefix: "Chapter",
+  /* Drop your OWN castle photo here.
+   *   - Put any .jpg/.png in  game/assets/
+   *   - Set the path below (e.g. "assets/my-castle.jpg")
+   *   - Leave "" to use the built-in animated castle scene
+   * The image fades in as the sky backdrop; the animated canvas effects
+   * (moon, aurora, lightning, particles, fog) still overlay on top.
+   * Use your own photography or a CC0 source (Unsplash / Wikimedia Commons). */
+  backgroundImage: "",
+  backgroundOverlayOpacity: 0.45,
 };

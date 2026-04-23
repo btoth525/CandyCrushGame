@@ -1,19 +1,61 @@
 {
   "name": "Charles & Brandon's Wizarding World of Nuts",
   "short_name": "Nuts!",
-  "description": "A spellbound match-3 adventure starring nuts of the wizarding world.",
+  "description": "A spellbound match-3 adventure: wizard hats, golden snitches, potions, spellbooks, crystal balls. 20 hand-crafted levels with special spells, combos, and a moonlit castle backdrop.",
   "start_url": "./",
   "scope": "./",
   "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
   "orientation": "portrait",
-  "background_color": "#1a0d2e",
+  "background_color": "#05020e",
   "theme_color": "#1a0d2e",
   "lang": "en",
-  "categories": ["games", "entertainment"],
+  "dir": "ltr",
+  "categories": ["games", "entertainment", "casual"],
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
     { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/title.svg",
+      "sizes": "1200x675",
+      "type": "image/svg+xml",
+      "form_factor": "wide",
+      "label": "Title screen with moonlit castle"
+    },
+    {
+      "src": "screenshots/gameplay.svg",
+      "sizes": "1200x900",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "Gameplay with a match-4 combo in progress"
+    },
+    {
+      "src": "screenshots/map.svg",
+      "sizes": "1200x900",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "The Enchanted Nut Path level map"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Continue",
+      "short_name": "Continue",
+      "description": "Jump back into the level map",
+      "url": "./#map",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "New Game",
+      "short_name": "New",
+      "description": "Start from Chapter 1",
+      "url": "./#play",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false
 }

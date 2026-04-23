@@ -163,7 +163,15 @@ NUTS.Main = (function () {
     wireEvents();
     const bgCanvas = document.getElementById('bg-canvas');
     if (bgCanvas && NUTS.Background) NUTS.Background.init(bgCanvas);
-    openTitle();
+    /* Respect PWA shortcut hashes: #map / #play */
+    const hash = (location.hash || '').slice(1);
+    if (hash === 'map' && Object.keys(progress.stars || {}).length > 0) {
+      openMap();
+    } else if (hash === 'play') {
+      startLevel(NUTS.levels[0]);
+    } else {
+      openTitle();
+    }
     registerSW();
   }
 

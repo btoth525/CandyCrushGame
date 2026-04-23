@@ -132,25 +132,40 @@ NUTS.Game = function (level, opts) {
     const el = document.createElement('div');
     el.className = 'tile';
     const meta = typeMeta(t.type);
-    el.style.background = meta.color;
+    el.style.background = `linear-gradient(180deg, ${meta.color} 0%, ${meta.bg || meta.color} 100%)`;
     el.style.width = cellPx + 'px';
     el.style.height = cellPx + 'px';
     el.style.transform = `translate(${c * cellPx}px, ${r * cellPx}px)`;
+    /* Priority: external PNG > inline SVG > emoji glyph */
     if (meta.image) {
       const img = document.createElement('img');
       img.className = 'tile-img';
       img.src = meta.image;
       img.alt = meta.label;
-      img.onerror = () => { img.replaceWith(glyphSpan(meta.glyph)); };
+      img.onerror = () => {
+        img.remove();
+        fallbackArt(el, meta);
+      };
       el.appendChild(img);
     } else {
-      el.appendChild(glyphSpan(meta.glyph));
+      fallbackArt(el, meta);
     }
     applySpecialClasses(el, t);
     el.dataset.id = t.id;
     el.addEventListener('pointerdown', (e) => onTilePointer(e, r, c));
     boardEl.appendChild(el);
     t.el = el;
+  }
+
+  function fallbackArt(el, meta) {
+    if (meta.svgArt && NUTS.tileArt && NUTS.tileArt[meta.svgArt]) {
+      const wrap = document.createElement('div');
+      wrap.className = 'tile-svg';
+      wrap.innerHTML = NUTS.tileArt[meta.svgArt];
+      el.appendChild(wrap);
+    } else {
+      el.appendChild(glyphSpan(meta.glyph));
+    }
   }
 
   function glyphSpan(g) {

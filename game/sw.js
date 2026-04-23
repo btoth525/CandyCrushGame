@@ -1,10 +1,11 @@
 /* Service worker: cache-first offline support.
  * Bump CACHE_VERSION whenever you ship changes that should invalidate the cache. */
-const CACHE_VERSION = 'cbwwn-v2';
+const CACHE_VERSION = 'cbwwn-v3';
 const CORE = [
   './',
   './index.html',
   './styles.css',
+  './tile-art.js',
   './textures.js',
   './levels.js',
   './audio.js',
