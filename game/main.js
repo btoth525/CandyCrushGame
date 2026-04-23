@@ -161,6 +161,8 @@ NUTS.Main = (function () {
     load();
     applySettings();
     wireEvents();
+    const bgCanvas = document.getElementById('bg-canvas');
+    if (bgCanvas && NUTS.Background) NUTS.Background.init(bgCanvas);
     openTitle();
     registerSW();
   }

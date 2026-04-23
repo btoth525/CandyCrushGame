@@ -406,6 +406,7 @@ NUTS.Game = function (level, opts) {
       }
     });
     if (chain >= 3) shake();
+    if (chain >= 4) spawnLightning();
     await Promise.all(promises);
   }
 
@@ -437,6 +438,8 @@ NUTS.Game = function (level, opts) {
     }
     audio.sfx[t.special === 'colorbomb' ? 'patronus' : t.special === 'wrapped' ? 'incendio' : 'bombarda']();
     if (t.el) spawnSparks(r, c, '#fff');
+    spawnShockwave(r, c, t.special === 'colorbomb' ? 'violet' : (t.special === 'wrapped' ? 'crimson' : ''));
+    if (t.special === 'colorbomb') spawnLightning();
   }
 
   function addClear(r, c, toClear) {
@@ -570,19 +573,45 @@ NUTS.Game = function (level, opts) {
   function spawnSparks(r, c, color) {
     const x = c * cellPx + cellPx / 2 + 6;
     const y = r * cellPx + cellPx / 2 + 6;
-    for (let i = 0; i < 8; i++) {
+    const n = 14;
+    for (let i = 0; i < n; i++) {
       const s = document.createElement('div');
       s.className = 'spark';
-      s.style.background = color;
+      const col = i % 3 === 0 ? '#ffd764' : (i % 3 === 1 ? color : '#ffffff');
+      s.style.background = col;
+      s.style.color = col;
+      const size = 4 + Math.random() * 8;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
       s.style.left = x + 'px';
       s.style.top = y + 'px';
-      const ang = (Math.PI * 2 * i) / 8 + Math.random() * 0.5;
-      const dist = 30 + Math.random() * 30;
+      const ang = (Math.PI * 2 * i) / n + Math.random() * 0.6;
+      const dist = 40 + Math.random() * 50;
       s.style.setProperty('--dx', Math.cos(ang) * dist + 'px');
       s.style.setProperty('--dy', Math.sin(ang) * dist + 'px');
       fxEl.appendChild(s);
-      setTimeout(() => s.remove(), 700);
+      setTimeout(() => s.remove(), 900);
     }
+  }
+
+  function spawnShockwave(r, c, variant) {
+    const x = c * cellPx + cellPx / 2 + 6;
+    const y = r * cellPx + cellPx / 2 + 6;
+    const s = document.createElement('div');
+    s.className = 'shockwave' + (variant ? ' ' + variant : '');
+    s.style.left = x + 'px';
+    s.style.top = y + 'px';
+    s.style.width = cellPx + 'px';
+    s.style.height = cellPx + 'px';
+    fxEl.appendChild(s);
+    setTimeout(() => s.remove(), 720);
+  }
+
+  function spawnLightning() {
+    const f = document.createElement('div');
+    f.className = 'lightning-flash';
+    fxEl.appendChild(f);
+    setTimeout(() => f.remove(), 400);
   }
 
   function spawnFloatText(r, c, text) {

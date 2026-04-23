@@ -16,10 +16,10 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
   <div id="app">
 
     <div id="screen-title" class="screen active">
-      <div class="stars-bg"></div>
       <div class="title-inner">
         <h1 class="title-main">
           <span class="title-by">Charles &amp; Brandon's</span>
@@ -60,6 +60,7 @@
       </header>
       <div id="objectives"></div>
       <div id="board-wrap">
+        <div class="rune-ring"></div>
         <div id="board"></div>
         <div id="fx-layer"></div>
         <div id="combo-popup"></div>
@@ -80,6 +81,7 @@
   <script src="textures.js"></script>
   <script src="levels.js"></script>
   <script src="audio.js"></script>
+  <script src="background.js"></script>
   <script src="game.js"></script>
   <script src="ui.js"></script>
   <script src="main.js"></script>
