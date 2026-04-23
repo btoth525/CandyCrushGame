@@ -235,9 +235,9 @@ NUTS.tileArt = {
   <defs>
     <radialGradient id="ballG" cx="0.38" cy="0.32">
       <stop offset="0" stop-color="#fff" stop-opacity="0.95"/>
-      <stop offset="0.3" stop-color="#d4b8ff" stop-opacity="0.85"/>
-      <stop offset="0.7" stop-color="#6b21a8" stop-opacity="0.85"/>
-      <stop offset="1" stop-color="#1a0838" stop-opacity="0.95"/>
+      <stop offset="0.3" stop-color="#9bd0ff" stop-opacity="0.9"/>
+      <stop offset="0.7" stop-color="#1d52c2" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#0a1840" stop-opacity="0.95"/>
     </radialGradient>
     <linearGradient id="standG" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#a37518"/>
@@ -245,8 +245,8 @@ NUTS.tileArt = {
       <stop offset="1" stop-color="#3d2810"/>
     </linearGradient>
     <radialGradient id="ballGlow" cx="0.5" cy="0.5">
-      <stop offset="0" stop-color="#c99bff" stop-opacity="0.55"/>
-      <stop offset="1" stop-color="#6b21a8" stop-opacity="0"/>
+      <stop offset="0" stop-color="#7fb6ff" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#1d52c2" stop-opacity="0"/>
     </radialGradient>
   </defs>
   <!-- ambient glow -->

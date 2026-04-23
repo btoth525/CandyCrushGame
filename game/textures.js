@@ -65,8 +65,8 @@ NUTS.tileTypes = [
     glyph: '🔮',
     image: 'assets/crystalball.png',
     svgArt: 'crystalball',
-    color: '#4b1a80',
-    bg: '#1a0838',
+    color: '#1d3a8a',
+    bg: '#0a1840',
   },
 ];
 

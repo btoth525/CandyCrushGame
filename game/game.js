@@ -213,25 +213,62 @@ NUTS.Game = function (level, opts) {
   function onTilePointer(e, r, c) {
     if (busy || over) return;
     audio.resume();
+    bumpIdle();
+    clearHint();
     const t = board[r][c];
     if (!t) return;
+    if (t.jinx > 0) { audio.sfx.bad(); return; }
+    /* If something is already selected, treat this as the second tap */
     if (selected) {
       const { r: sr, c: sc } = selected;
-      if (sr === r && sc === c) {
-        deselect();
-        return;
-      }
+      if (sr === r && sc === c) { deselect(); return; }
       if (Math.abs(sr - r) + Math.abs(sc - c) === 1) {
         const a = board[sr][sc], b = board[r][c];
         deselect();
-        attemptSwap(sr, sc, r, c, a, b);
+        if (a && b && !a.jinx && !b.jinx) attemptSwap(sr, sc, r, c, a, b);
         return;
       }
       deselect();
     }
-    if (t.jinx > 0) { audio.sfx.bad(); return; }
-    selected = { r, c };
-    if (t.el) t.el.classList.add('selected');
+    /* Begin drag/tap on this tile. If pointer moves enough, swap with
+     * the neighbour in that direction; if it lifts in place, just
+     * select it (classic tap-tap-to-swap). */
+    e.preventDefault && e.preventDefault();
+    const startX = e.clientX, startY = e.clientY;
+    let didSwap = false;
+    function onMove(ev) {
+      if (didSwap) return;
+      const dx = ev.clientX - startX;
+      const dy = ev.clientY - startY;
+      const threshold = Math.max(12, cellPx * 0.35);
+      if (Math.abs(dx) < threshold && Math.abs(dy) < threshold) return;
+      let dr = 0, dc = 0;
+      if (Math.abs(dx) > Math.abs(dy)) dc = dx > 0 ? 1 : -1;
+      else                              dr = dy > 0 ? 1 : -1;
+      const r2 = r + dr, c2 = c + dc;
+      if (!inBounds(r2, c2)) return;
+      const b = board[r2][c2];
+      if (!b || b.jinx > 0) { audio.sfx.bad(); cleanup(); return; }
+      didSwap = true;
+      cleanup();
+      deselect();
+      attemptSwap(r, c, r2, c2, t, b);
+    }
+    function onUp() {
+      cleanup();
+      if (didSwap) return;
+      /* No drag -> classic tap-select */
+      selected = { r, c };
+      if (t.el) t.el.classList.add('selected');
+    }
+    function cleanup() {
+      window.removeEventListener('pointermove',  onMove);
+      window.removeEventListener('pointerup',    onUp);
+      window.removeEventListener('pointercancel', onUp);
+    }
+    window.addEventListener('pointermove',  onMove);
+    window.addEventListener('pointerup',    onUp);
+    window.addEventListener('pointercancel', onUp);
   }
 
   function deselect() {
@@ -335,6 +372,95 @@ NUTS.Game = function (level, opts) {
       await applyGravity();
     }
     await collectGolden();
+    /* If the player is left without any valid swap, reshuffle */
+    if (!over && !findHint()) await reshuffleBoard();
+    bumpIdle();
+  }
+
+  /* =========================================================
+     HINT SYSTEM + NO-MOVES RESHUFFLE
+     ========================================================= */
+  function findHint() {
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const t = board[r][c];
+        if (!t || t.jinx) continue;
+        /* Try swap right */
+        if (c + 1 < COLS) {
+          const t2 = board[r][c + 1];
+          if (t2 && !t2.jinx) {
+            swapInBoard(r, c, r, c + 1);
+            const has = findMatches().length > 0;
+            swapInBoard(r, c, r, c + 1);
+            if (has) return [{ r, c }, { r, c: c + 1 }];
+          }
+        }
+        /* Try swap down */
+        if (r + 1 < ROWS) {
+          const t2 = board[r + 1][c];
+          if (t2 && !t2.jinx) {
+            swapInBoard(r, c, r + 1, c);
+            const has = findMatches().length > 0;
+            swapInBoard(r, c, r + 1, c);
+            if (has) return [{ r, c }, { r: r + 1, c }];
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  function showHint() {
+    const h = findHint();
+    if (!h) return;
+    h.forEach(({ r, c }) => {
+      const t = board[r][c];
+      if (t && t.el) t.el.classList.add('hint');
+    });
+  }
+  function clearHint() {
+    boardEl.querySelectorAll('.tile.hint').forEach((el) => el.classList.remove('hint'));
+  }
+
+  let idleTimer = 0;
+  function bumpIdle() {
+    clearHint();
+    if (idleTimer) clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => { if (!busy && !over) showHint(); }, 6000);
+  }
+
+  async function reshuffleBoard() {
+    /* Collect the "loose" tiles (non-jinx, non-golden, non-special). */
+    const loose = [];
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const t = board[r][c];
+        if (t && !t.jinx && !t.golden && !t.special) loose.push({ r, c, t });
+      }
+    }
+    if (loose.length < 4) return;
+    /* Shuffle the types around until both (a) there's no immediate
+     * matches on the resulting board AND (b) at least one valid swap
+     * exists. Cap retries so we never spin forever. */
+    const pool = loose.map((x) => x.t.type);
+    let attempts = 0;
+    do {
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      loose.forEach((x, i) => { x.t.type = pool[i]; });
+      attempts++;
+    } while ((findMatches().length > 0 || !findHint()) && attempts < 80);
+
+    /* Rebuild tile visuals for the loose set. */
+    loose.forEach((x) => {
+      if (x.t.el) { x.t.el.remove(); x.t.el = null; }
+      makeTileEl(x.t, x.r, x.c);
+    });
+    spawnFloatText(Math.floor(ROWS / 2), Math.floor(COLS / 2), 'SHUFFLE!');
+    audio.sfx.specialCreate();
+    await wait(250);
   }
 
   async function processMatches(matches, ctx) {
@@ -727,14 +853,17 @@ NUTS.Game = function (level, opts) {
     onEvent('moves', moves);
     onEvent('score', 0);
     onEvent('start', { level });
-    /* Resolve any accidental initial matches silently */
+    /* Resolve any accidental initial matches silently, then make sure
+     * the starting board actually HAS a valid swap somewhere. */
     setTimeout(async () => {
       busy = true;
       while (findMatches().length > 0) {
         await processMatches(findMatches(), {});
         await applyGravity();
       }
+      if (!findHint()) await reshuffleBoard();
       busy = false;
+      bumpIdle();
     }, 50);
   }
 

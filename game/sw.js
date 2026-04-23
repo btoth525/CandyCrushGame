@@ -1,6 +1,6 @@
 /* Service worker: cache-first offline support.
  * Bump CACHE_VERSION whenever you ship changes that should invalidate the cache. */
-const CACHE_VERSION = 'cbwwn-v9';
+const CACHE_VERSION = 'cbwwn-v10';
 const CORE = [
   './',
   './index.html',
