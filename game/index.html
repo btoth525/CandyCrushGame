@@ -30,10 +30,14 @@
         <p class="tagline">A Match-3 Spellbound Adventure</p>
         <div class="title-buttons">
           <button id="btn-play" class="btn btn-primary">Begin Adventure</button>
+          <button id="btn-daily" class="btn server-only" hidden>🌙 Daily Spell</button>
+          <button id="btn-leaderboard" class="btn server-only" hidden>🏆 Leaderboards</button>
           <button id="btn-settings" class="btn">Settings</button>
+          <button id="btn-account" class="btn btn-small server-only" hidden>👤 Wizard Profile</button>
           <a href="admin.html" class="btn btn-small">⚙ Admin Panel</a>
           <button id="btn-reset" class="btn btn-small">Reset Progress</button>
         </div>
+        <div id="online-status" class="online-status hidden"></div>
         <p class="credits">Brewed by Charles &amp; Brandon in the Great Nuttery</p>
       </div>
     </div>
@@ -48,6 +52,25 @@
         <svg id="map-path" preserveAspectRatio="none"></svg>
         <div id="map-nodes"></div>
       </div>
+    </div>
+
+    <div id="screen-leaderboard" class="screen">
+      <header class="map-header">
+        <button id="btn-lb-back" class="btn btn-icon">◀</button>
+        <h2>🏆 Leaderboards</h2>
+        <div></div>
+      </header>
+      <div class="lb-controls">
+        <select id="lb-scope">
+          <option value="global">Global (all levels combined)</option>
+        </select>
+        <select id="lb-period">
+          <option value="all">All time</option>
+          <option value="weekly">This week</option>
+          <option value="daily">Last 24h</option>
+        </select>
+      </div>
+      <div id="lb-list" class="lb-list"></div>
     </div>
 
     <div id="screen-game" class="screen">
@@ -83,6 +106,7 @@
   <script src="textures.js"></script>
   <script src="levels.js"></script>
   <script src="config.js"></script>
+  <script src="api.js"></script>
   <script src="audio.js"></script>
   <script src="background.js"></script>
   <script src="game.js"></script>

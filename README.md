@@ -44,20 +44,29 @@ cd game && python3 -m http.server 8000
 
 ## Hosting on Unraid (Docker)
 
-The repo ships with everything you need to run the game in a container.
+The repo ships with two deployment profiles — pick one:
 
-### Option A — Compose (easiest)
+| Profile | Use when | Container | Features |
+|---------|----------|-----------|----------|
+| `static` | You want the simplest possible deploy and don't need leaderboards | `nginx:alpine`, ~25 MB | The game itself, fully playable, localStorage save |
+| `server` | You want global leaderboards, accounts, cloud save sync, daily challenge | Node + SQLite, ~100 MB | Everything in `static` PLUS `/api/*` backend |
 
-If you have the **Docker Compose Manager** plugin (Community Apps):
+### Server mode (recommended — has leaderboards)
 
-1. Clone the repo onto your Unraid box, or copy the files into a stack folder.
-2. Run:
-   ```bash
-   docker compose up -d --build
-   ```
-3. Visit `http://<unraid-ip>:8080`
+```bash
+docker compose --profile server up -d --build
+# (or just: docker compose up -d --build  -- server is the default profile)
+```
 
-The `docker-compose.yml` exposes port `8080` on the host. Change the left side of `"8080:80"` if you want a different port.
+Visit `http://<unraid-ip>:8080`. The container persists its SQLite database to `./data/wizarding.db` on the host, so your leaderboards survive container rebuilds. Mount that folder somewhere durable on your Unraid array.
+
+### Static mode (no leaderboards)
+
+```bash
+docker compose --profile static up -d --build
+```
+
+Same URL, no backend. Useful if you just want a single-player game with zero state on the server.
 
 ### Option B — Unraid Docker tab template
 
@@ -177,6 +186,47 @@ That opens Xcode. From there you can run on a simulator, sideload onto a connect
 └── scripts/
     └── build-android.sh           # One-shot APK builder
 ```
+
+## Server mode — leaderboards, accounts, cloud save, daily
+
+When you run the `server` profile, the title screen sprouts three new buttons (auto-hidden in static mode):
+
+- **🏆 Leaderboards** — global (all-levels combined) and per-level rankings. Filter by all-time / weekly / last-24h. Top 3 get gold/silver/bronze borders. Your row glows gold.
+- **🌙 Daily Spell** — a server-seeded level that's the same for every player worldwide that day. Compete for the top score in 24 hours.
+- **👤 Wizard Profile** — claim a unique handle, set a display name, sign out.
+
+### How the API works
+
+Single-file Express server in `server/server.js`, SQLite via `better-sqlite3`, no other infra:
+
+| Endpoint | What it does |
+|---|---|
+| `GET  /api/ping` | Health check (also used by client to detect server mode) |
+| `POST /api/auth/register` `{name}` | Claim a unique wizard name, returns a bearer token |
+| `GET  /api/me` | Current profile |
+| `POST /api/me` `{displayName, house}` | Update profile |
+| `POST /api/scores` `{level, score, stars, moves}` | Submit a score, returns your rank |
+| `GET  /api/leaderboard?level=N&period=all\|weekly\|daily` | Per-level top-25 |
+| `GET  /api/leaderboard/global?period=...` | Sum-of-bests global ranking |
+| `GET  /api/save` / `PUT /api/save` | Cloud-sync the localStorage progress blob |
+| `GET  /api/daily` | Today's daily challenge level definition |
+
+### Cloud save
+
+When a player logs in on a new device, the game pulls their cloud save and merges it with whatever's local (highest stars and best score per level always win). Every level win pushes the updated save back to the server.
+
+### Anti-cheat (light)
+
+- Auth tokens are SHA-256 hashed in the DB
+- Per-IP rate limits on every write endpoint
+- Score / level / stars range-validated server-side
+- Score submission requires a valid bearer token
+
+This is "casual-friends" anti-cheat, not bank-grade. If you need bullet-proof, add server-side gameplay validation later (replay sigs, etc).
+
+### Backups
+
+Just copy `./data/wizarding.db`. SQLite plays nice with `cp` while the server is running because of WAL mode, but for a guaranteed-consistent backup either stop the container briefly or use `sqlite3 wizarding.db ".backup /path/to/copy.db"`.
 
 ## Admin Panel — GUI customisation (no code)
 

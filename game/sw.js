@@ -1,6 +1,6 @@
 /* Service worker: cache-first offline support.
  * Bump CACHE_VERSION whenever you ship changes that should invalidate the cache. */
-const CACHE_VERSION = 'cbwwn-v4';
+const CACHE_VERSION = 'cbwwn-v5';
 const CORE = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const CORE = [
   './admin.css',
   './admin.js',
   './config.js',
+  './api.js',
   './styles.css',
   './tile-art.js',
   './textures.js',
@@ -44,11 +45,14 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
+  /* Never cache the JSON API -- always go to network */
+  if (new URL(req.url).pathname.startsWith('/api/')) {
+    return; /* let browser handle */
+  }
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;
       return fetch(req).then((res) => {
-        /* Only cache same-origin successful responses */
         if (!res || res.status !== 200 || res.type !== 'basic') return res;
         const copy = res.clone();
         caches.open(CACHE_VERSION).then((c) => c.put(req, copy));

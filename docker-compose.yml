@@ -1,13 +1,30 @@
+# Charles & Brandon's Wizarding World of Nuts
+#
+# Two deployment profiles -- pick one:
+#
+#   docker compose --profile static up -d --build
+#       Static-only mode. nginx serves the game files. Tiny image (~25MB),
+#       no database, no leaderboards. Player progress lives in each
+#       browser's localStorage.
+#
+#   docker compose --profile server up -d --build
+#       Server mode. Node + SQLite container that serves the game AND
+#       exposes /api/* for accounts, leaderboards, cloud save, daily
+#       challenges. Persists to ./data/wizarding.db (volume-mounted).
+#
+# Default profile is `server` -- bare `docker compose up` runs the full
+# server-mode stack.
+
 services:
+
   wizarding-nuts:
     container_name: wizarding-nuts
+    profiles: ["static"]
     build:
       context: .
       dockerfile: Dockerfile
-    # Or pull a prebuilt image you push to a registry:
-    # image: yourname/wizarding-nuts:latest
     ports:
-      - "8080:80"        # change the LEFT port to whatever you want on Unraid
+      - "8080:80"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost/"]
@@ -15,7 +32,23 @@ services:
       timeout: 5s
       retries: 3
 
-# To run:
-#   docker compose up -d --build
-# Then visit:
-#   http://<unraid-ip>:8080
+  wizarding-nuts-server:
+    container_name: wizarding-nuts-server
+    profiles: ["server", ""]
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "8080:3000"
+    volumes:
+      - ./data:/data       # SQLite + future uploads live here
+    environment:
+      - PORT=3000
+      - DATA_DIR=/data
+      - STATIC_DIR=/app/game
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
